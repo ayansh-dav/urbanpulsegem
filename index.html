@@ -16,12 +16,13 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif}
-.app{max-width:780px;margin:0 auto;padding-bottom:140px}
+.app{max-width:820px;margin:0 auto;padding-bottom:140px}
 header{position:sticky;top:0;z-index:15;background:var(--brand);color:var(--bi);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 header h1{margin:0 0 0 auto;font-size:1.15rem;display:flex;align-items:center;gap:6px}
 #locbtn{display:flex;align-items:center;gap:6px;max-width:58%;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);color:inherit;border-radius:20px;padding:6px 12px;cursor:pointer;font-weight:700;text-align:left}
 #locbtn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .badge-admin{background:#ffb703;color:#14232b;font-size:.72rem;padding:2px 7px;border-radius:10px;font-weight:700;text-transform:uppercase}
+#sys-banner{background:#fff3cd;color:#664d03;padding:8px 14px;font-size:.88rem;border-bottom:1px solid #ffecb5;font-weight:700;text-align:center}
 nav{display:flex;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:52px;z-index:14;overflow-x:auto}
 nav button{flex:1;min-width:max-content;background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);padding:11px 10px;font-size:.92rem;cursor:pointer;font-weight:700}
 nav button[aria-selected=true]{color:var(--ink);border-color:var(--brand)}
@@ -30,6 +31,7 @@ nav button.admin-tab[aria-selected=true]{border-color:var(--admin);background:va
 section{padding:14px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:12px}
 h2{margin:0 0 8px;font-size:1.08rem}
+h3{margin:0 0 8px;font-size:.98rem;color:var(--admin)}
 label{display:block;font-size:.88rem;color:var(--mute);margin:10px 0 3px}
 input,select,textarea,button{font:inherit;color:inherit}
 input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}
@@ -37,6 +39,7 @@ button{padding:9px 14px;border:1px solid var(--brand);background:var(--brand);co
 button:disabled{opacity:.6;cursor:not-allowed}
 button.alt{background:transparent;color:var(--ink);border-color:var(--line)}
 button.danger{background:var(--warn);border-color:var(--warn);color:#fff}
+button.admin-btn{background:var(--admin);border-color:var(--admin);color:#fff}
 button.sm{padding:5px 10px;font-size:.82rem}
 .row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
 .mute{color:var(--mute);font-size:.86rem}
@@ -46,11 +49,11 @@ button.sm{padding:5px 10px;font-size:.82rem}
 .tag.em{background:var(--warn);color:#fff;border-color:var(--warn)}
 .tag.ok{color:var(--ok);border-color:var(--ok)}
 .card img{width:100%;max-height:260px;object-fit:cover;border-radius:6px;margin:8px 0;background:var(--line)}
-.lb{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line)}.lb:first-of-type{border-top:0}
-.lb .rk{width:2.2ch;font-weight:700}.lb .nm{flex:1}.lb.me{background:var(--bg);margin:0 -8px;padding:9px 8px;border-radius:4px}.lb .p{font-weight:700;color:var(--brand)}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:12px}
+.lb{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}.lb:first-of-type{border-top:0}
+.lb .rk{width:2.4ch;font-weight:700}.lb .nm{flex:1}.lb.me{background:var(--bg);margin:0 -8px;padding:9px 8px;border-radius:4px}.lb .p{font-weight:700;color:var(--brand)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:12px}
 .stat-box{background:var(--bg);padding:10px;border-radius:6px;border:1px solid var(--line);text-align:center}
-.stat-box b{display:block;font-size:1.45rem;color:var(--brand)}
+.stat-box b{display:block;font-size:1.35rem;color:var(--brand)}
 #map3d{width:100%;height:460px;border-radius:8px;border:1px solid var(--line);overflow:hidden}
 .map-marker{width:22px;height:22px;border-radius:50%;border:3px solid #fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}
 .map-marker.em{background:#e63946;animation:pulse 1.4s infinite}
@@ -59,7 +62,14 @@ button.sm{padding:5px 10px;font-size:.82rem}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(230,57,70,.7)}70%{box-shadow:0 0 0 12px rgba(230,57,70,0)}100%{box-shadow:0 0 0 0 rgba(230,57,70,0)}}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}
 .modal[hidden]{display:none !important}
-.modal>div{background:var(--panel);width:100%;max-width:480px;border-radius:12px;padding:20px;max-height:90vh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.modal>div{background:var(--panel);width:100%;max-width:500px;border-radius:12px;padding:20px;max-height:90vh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{color:var(--mute);font-weight:700;background:var(--bg)}
+.pw-wrap{position:relative;display:flex;align-items:center}
+.pw-wrap input{padding-right:44px}
+.pw-toggle{position:absolute;right:6px;background:none;border:0;color:var(--mute);padding:4px 8px;font-size:.85rem;cursor:pointer}
 </style>
 </head>
 <body>
@@ -68,6 +78,7 @@ button.sm{padding:5px 10px;font-size:.82rem}
     <button id="locbtn" type="button" aria-label="Change location"><span>📍</span><span id="loctxt">Korba · W14</span></button>
     <h1>UrbanPulse <span id="adm-badge" class="badge-admin" hidden>Super Admin</span></h1>
   </header>
+  <div id="sys-banner" hidden></div>
 
   <nav role="tablist">
     <button role="tab" type="button" data-t="rep" aria-selected="true">Report</button>
@@ -78,6 +89,7 @@ button.sm{padding:5px 10px;font-size:.82rem}
     <button role="tab" type="button" data-t="adm" id="tab-adm" class="admin-tab" aria-selected="false" hidden>Admin ⚡</button>
   </nav>
 
+  <!-- REPORT TAB -->
   <section id="t-rep">
     <div class="card">
       <h2>Report a Civic Hazard</h2>
@@ -115,7 +127,7 @@ button.sm{padding:5px 10px;font-size:.82rem}
       <input id="fupl" type="file" accept="image/*" hidden>
       <img id="pv" alt="Preview" hidden style="width:100%;max-height:220px;object-fit:cover;margin-top:8px;border-radius:6px">
 
-      <p class="mute" id="gpsline" style="margin:10px 0 0">📍 Coordinates: 22.3600, 82.7500 (Korba Center)</p>
+      <p class="mute" id="gpsline" style="margin:10px 0 0">📍 Coordinates: 22.3600, 82.7500 (Korba)</p>
       <div class="route" id="prev"></div>
 
       <div class="row" style="margin-top:12px">
@@ -125,6 +137,7 @@ button.sm{padding:5px 10px;font-size:.82rem}
     </div>
   </section>
 
+  <!-- 3D MAP TAB -->
   <section id="t-map" hidden>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
@@ -138,96 +151,180 @@ button.sm{padding:5px 10px;font-size:.82rem}
     </div>
   </section>
 
+  <!-- COMMUNITY FEED TAB -->
   <section id="t-feed" hidden>
     <div class="card">
       <label for="fd" style="margin-top:0">Filter Reports by District</label>
-      <select id="fd">
-        <option value="">All Chhattisgarh Districts</option>
-        <option value="Korba">Korba</option>
-        <option value="Raipur">Raipur</option>
-        <option value="Bilaspur">Bilaspur</option>
-        <option value="Durg">Durg</option>
-        <option value="Raigarh">Raigarh</option>
-        <option value="Surguja">Surguja</option>
-        <option value="Dhamtari">Dhamtari</option>
-        <option value="Mahasamund">Mahasamund</option>
-      </select>
+      <select id="fd"></select>
     </div>
     <div id="feed"></div>
   </section>
 
+  <!-- LEADERBOARD TAB -->
   <section id="t-lb" hidden>
     <div class="card">
       <h2>Chhattisgarh Live Civic Leaderboard</h2>
+      <p class="mute" style="margin-top:0">Standard Report = 20 pts · Emergency Alert = 50 pts</p>
       <div id="lbl"></div>
     </div>
   </section>
 
+  <!-- MINE TAB -->
   <section id="t-mine" hidden>
-    <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
       <div>
         <b id="prof-name">Citizen</b>
         <div class="mute" id="prof-meta">Korba</div>
       </div>
-      <button type="button" class="alt sm" id="switch-acct">Switch Account</button>
+      <button type="button" class="alt sm" id="switch-acct">🔑 Switch Account / Logout</button>
     </div>
     <div id="mine"></div>
   </section>
 
+  <!-- SUPER ADMIN PANEL TAB -->
   <section id="t-adm" hidden>
-    <div class="card" style="border-color:var(--admin)">
-      <h2 style="color:var(--admin)">⚡ Super-Admin Control Center</h2>
+    <!-- Overview & Broadcast -->
+    <div class="card" style="border:2px solid var(--admin)">
+      <h2 style="color:var(--admin)">⚡ Super-Admin Control Center (Ayansh)</h2>
       <div class="stat-grid">
         <div class="stat-box"><b id="st-reps">0</b><span class="mute">Total Reports</span></div>
+        <div class="stat-box"><b id="st-open">0</b><span class="mute">Open Issues</span></div>
         <div class="stat-box"><b id="st-em">0</b><span class="mute">Emergencies</span></div>
+        <div class="stat-box"><b id="st-dists">0</b><span class="mute">Districts</span></div>
+        <div class="stat-box"><b id="st-users">0</b><span class="mute">Users</span></div>
+      </div>
+      <label for="adm-banner-in">📢 Live State-Wide Announcement Banner (Leave blank to hide)</label>
+      <div class="row">
+        <input id="adm-banner-in" placeholder="e.g. Heavy monsoon alert in Korba & Raipur — report waterlogging immediately">
+        <button type="button" class="admin-btn sm" id="adm-banner-save" style="flex:0 0 auto">Update Banner</button>
       </div>
     </div>
+
+    <!-- District & Municipal Directory Manager -->
     <div class="card">
-      <h2>All Reports (Moderation)</h2>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <h2>🏛️ Manage Districts & Municipal Corporations</h2>
+        <button type="button" class="alt sm" id="adm-dist-reset">Reset Default Districts</button>
+      </div>
+      <p class="mute" style="margin-top:0">Add new districts, remove existing ones, or edit municipal emails, phone numbers, and map coordinates.</p>
+
+      <div style="background:var(--admin-bg);padding:12px;border-radius:8px;margin-bottom:14px;border:1px solid var(--line)">
+        <h3 id="dist-form-title">➕ Add / Edit District & Municipal Body</h3>
+        <input type="hidden" id="edit-dist-idx" value="-1">
+        <div class="row">
+          <div>
+            <label for="d-name">District Name</label>
+            <input id="d-name" placeholder="e.g. Korba">
+          </div>
+          <div>
+            <label for="d-body">Municipal Corporation / Body</label>
+            <input id="d-body" placeholder="e.g. Municipal Corporation Korba">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="d-email">Official Dispatch Email(s)</label>
+            <input id="d-email" placeholder="e.g. corporationkorba@gmail.com">
+          </div>
+          <div>
+            <label for="d-phone">Control Room Phone</label>
+            <input id="d-phone" placeholder="e.g. 07759-222333">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="d-lat">Latitude</label>
+            <input id="d-lat" type="number" step="any" placeholder="22.3600">
+          </div>
+          <div>
+            <label for="d-lng">Longitude</label>
+            <input id="d-lng" type="number" step="any" placeholder="82.7500">
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <button type="button" class="admin-btn" id="d-save">💾 Save District</button>
+          <button type="button" class="alt" id="d-cancel" hidden>Cancel Edit</button>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>District</th>
+              <th>Municipal Body</th>
+              <th>Official Email & Phone</th>
+              <th>GPS</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adm-dist-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Manage Users & Leaderboard Points -->
+    <div class="card">
+      <h2>👥 Manage Users, Passwords & Leaderboard Points</h2>
+      <p class="mute" style="margin-top:0">Edit user names, adjust bonus civic points, view/change passwords, or remove accounts.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>District & Contact</th>
+              <th>Password</th>
+              <th>Bonus Pts</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adm-user-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Manage All Reports -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+        <h2 style="margin:0">📋 All Citizen Reports (Full Edit & Moderation)</h2>
+        <button type="button" class="danger sm" id="adm-clear-reps">🗑️ Clear All Reports</button>
+      </div>
       <div id="adm-reps-list"></div>
     </div>
   </section>
 </div>
 
-<!-- Account Onboarding Modal -->
+<!-- LOGIN / CREATE ACCOUNT MODAL -->
 <div class="modal" id="onb" hidden>
   <div>
-    <h2>Create Your UrbanPulse Account</h2>
-    <label for="an">Your Name</label>
-    <input id="an" placeholder="Enter your name">
+    <h2>Login / Create UrbanPulse Account</h2>
+    <p class="mute" style="margin-top:0">Enter your name and password. New users will have their password saved automatically.</p>
+    <label for="an">Your Name / Username</label>
+    <input id="an" placeholder="Enter your name (e.g. ayansh)" autocomplete="username">
+
+    <label for="apass">Password</label>
+    <div class="pw-wrap">
+      <input id="apass" type="password" placeholder="Enter password" autocomplete="current-password">
+      <button type="button" class="pw-toggle" id="pw-eye">👁️</button>
+    </div>
+
     <label for="ad">District</label>
-    <select id="ad">
-      <option value="Korba">Korba</option>
-      <option value="Raipur">Raipur</option>
-      <option value="Bilaspur">Bilaspur</option>
-      <option value="Durg">Durg</option>
-      <option value="Raigarh">Raigarh</option>
-      <option value="Surguja">Surguja</option>
-      <option value="Dhamtari">Dhamtari</option>
-      <option value="Mahasamund">Mahasamund</option>
-    </select>
+    <select id="ad"></select>
+
     <label for="ac">Contact (Mobile or Email)</label>
     <input id="ac" placeholder="10-digit mobile or email">
-    <p class="mute" id="aerr" style="color:var(--warn);margin:6px 0 0"></p>
-    <button type="button" id="acreate" style="width:100%;margin-top:12px">Continue</button>
+
+    <p class="mute" id="aerr" style="color:var(--warn);font-weight:700;margin:8px 0 0"></p>
+    <button type="button" id="acreate" style="width:100%;margin-top:12px">🔑 Login / Continue</button>
   </div>
 </div>
 
-<!-- Location Selector Modal -->
+<!-- LOCATION SELECTOR MODAL -->
 <div class="modal" id="locmod" hidden>
   <div>
     <h2>Change Active Location</h2>
     <label for="ldist">District</label>
-    <select id="ldist">
-      <option value="Korba">Korba</option>
-      <option value="Raipur">Raipur</option>
-      <option value="Bilaspur">Bilaspur</option>
-      <option value="Durg">Durg</option>
-      <option value="Raigarh">Raigarh</option>
-      <option value="Surguja">Surguja</option>
-      <option value="Dhamtari">Dhamtari</option>
-      <option value="Mahasamund">Mahasamund</option>
-    </select>
+    <select id="ldist"></select>
     <label for="lward">Ward Number</label>
     <input id="lward" type="number" min="1" max="70" value="14">
     <div class="row" style="margin-top:14px">
@@ -237,30 +334,115 @@ button.sm{padding:5px 10px;font-size:.82rem}
   </div>
 </div>
 
+<!-- ADMIN EDIT REPORT MODAL -->
+<div class="modal" id="editrepmod" hidden>
+  <div>
+    <h2>✏️ Edit Report Details</h2>
+    <input type="hidden" id="er-id">
+    <label for="er-cat">Hazard Title / Category</label>
+    <input id="er-cat">
+    <div class="row">
+      <div>
+        <label for="er-dist">District</label>
+        <select id="er-dist"></select>
+      </div>
+      <div>
+        <label for="er-ward">Ward</label>
+        <input id="er-ward" type="number" min="1" max="100">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="er-tier">Priority Tier</label>
+        <select id="er-tier">
+          <option value="standard">Standard</option>
+          <option value="emergency">🚨 Emergency</option>
+        </select>
+      </div>
+      <div>
+        <label for="er-status">Status</label>
+        <select id="er-status">
+          <option value="open">Open</option>
+          <option value="closed">✅ Closed / Fixed</option>
+        </select>
+      </div>
+    </div>
+    <label for="er-name">Reported By (Citizen Name)</label>
+    <input id="er-name">
+    <label for="er-notes">Notes & Landmark</label>
+    <textarea id="er-notes" rows="3"></textarea>
+    <div class="row" style="margin-top:14px">
+      <button type="button" class="alt" id="er-cancel">Cancel</button>
+      <button type="button" class="admin-btn" id="er-save">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN EDIT USER MODAL -->
+<div class="modal" id="editusermod" hidden>
+  <div>
+    <h2>✏️ Edit User Account</h2>
+    <input type="hidden" id="eu-idx">
+    <label for="eu-name">Username</label>
+    <input id="eu-name">
+    <label for="eu-pass">Password</label>
+    <input id="eu-pass">
+    <label for="eu-dist">District</label>
+    <select id="eu-dist"></select>
+    <label for="eu-contact">Contact</label>
+    <input id="eu-contact">
+    <label for="eu-bonus">Bonus Leaderboard Points</label>
+    <input id="eu-bonus" type="number" value="0">
+    <div class="row" style="margin-top:14px">
+      <button type="button" class="alt" id="eu-cancel">Cancel</button>
+      <button type="button" class="admin-btn" id="eu-save">💾 Save User</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const $ = id => document.getElementById(id);
-const _K_ADM = '75.83.75.68.89.66';
-const _chkAdm = s => [...String(s || '').trim().toLowerCase()].map(c => c.charCodeAt(0) ^ 42).join('.') === _K_ADM;
+
+const SUPER_ADMIN_USER = 'ayansh';
+const SUPER_ADMIN_PASS = '231238';
+
+const isSuperAdmin = u => u && String(u.name || '').trim().toLowerCase() === SUPER_ADMIN_USER && String(u.pass || '') === SUPER_ADMIN_PASS;
+
 const ls = {
   get(k){ try { return localStorage.getItem(k); } catch { return null; } },
   set(k,v){ try { localStorage.setItem(k,v); } catch {} }
 };
 
-const DIST_COORDS = {
-  Korba: { lat: 22.3600, lng: 82.7500, body: 'Municipal Corporation Korba' },
-  Raipur: { lat: 21.2514, lng: 81.6296, body: 'Raipur Municipal Corporation' },
-  Bilaspur: { lat: 22.0797, lng: 82.1409, body: 'Nagar Nigam Bilaspur' },
-  Durg: { lat: 21.2090, lng: 81.3790, body: 'Nagar Nigam Bhilai' },
-  Raigarh: { lat: 21.8974, lng: 83.3950, body: 'Raigarh Municipal Corporation' },
-  Surguja: { lat: 23.1200, lng: 83.2000, body: 'Municipal Corporation Ambikapur' },
-  Dhamtari: { lat: 20.7072, lng: 81.5497, body: 'Dhamtari Municipal Corporation' },
-  Mahasamund: { lat: 21.1070, lng: 82.0979, body: 'Municipality Mahasamund' }
-};
+const DEFAULT_DISTRICTS = [
+  { dist: 'Korba', body: 'Municipal Corporation Korba', email: 'corporationkorba@gmail.com', phone: '07759-221333', lat: 22.3600, lng: 82.7500 },
+  { dist: 'Raipur', body: 'Raipur Municipal Corporation', email: 'dc_rmc@rediffmail.com', phone: '0771-2535780', lat: 21.2514, lng: 81.6296 },
+  { dist: 'Bilaspur', body: 'Nagar Nigam Bilaspur', email: 'commissionerbmcbilaspur@gmail.com', phone: '07752-222642', lat: 22.0797, lng: 82.1409 },
+  { dist: 'Durg', body: 'Nagar Nigam Bhilai', email: 'nigam_bhilai@yahoo.co.in', phone: '+917882295055', lat: 21.2090, lng: 81.3790 },
+  { dist: 'Raigarh', body: 'Raigarh Municipal Corporation', email: 'ulb.raigarh@gmail.com', phone: '07762-222404', lat: 21.8974, lng: 83.3950 },
+  { dist: 'Surguja', body: 'Municipal Corporation Ambikapur', email: 'ambikapur.mc@gmail.com', phone: '07774-236396', lat: 23.1200, lng: 83.2000 },
+  { dist: 'Dhamtari', body: 'Dhamtari Municipal Corporation', email: 'dhamtarimunicipal@gmail.com', phone: '07722-237555', lat: 20.7072, lng: 81.5497 },
+  { dist: 'Mahasamund', body: 'Municipality Mahasamund', email: 'cmo.mahasamund@gmail.com', phone: '07723-222230', lat: 21.1070, lng: 82.0979 }
+];
 
-let uid = ls.get('up_uid');
-if (!uid) {
-  uid = 'U-' + Math.random().toString(36).slice(2, 9).toUpperCase();
-  ls.set('up_uid', uid);
+let districts = [];
+try { districts = JSON.parse(ls.get('up_districts') || 'null') || []; } catch { districts = []; }
+if (!districts.length) {
+  districts = JSON.parse(JSON.stringify(DEFAULT_DISTRICTS));
+  ls.set('up_districts', JSON.stringify(districts));
+}
+
+let users = [];
+try { users = JSON.parse(ls.get('up_users') || 'null') || []; } catch { users = []; }
+if (!users.some(u => u.name.toLowerCase() === SUPER_ADMIN_USER)) {
+  users.unshift({
+    uid: 'U-ADMIN',
+    name: 'ayansh',
+    pass: SUPER_ADMIN_PASS,
+    district: 'Korba',
+    contact: 'alexisanshu12r@gmail.com',
+    bonus: 100
+  });
+  ls.set('up_users', JSON.stringify(users));
 }
 
 let acct = null;
@@ -271,8 +453,8 @@ try { reports = JSON.parse(ls.get('up_reports') || 'null') || []; } catch { repo
 if (!reports.length) {
   reports = [{
     id: 'UP-DEMO1',
-    uid: 'U-DEMO',
-    name: 'Ayansh',
+    uid: 'U-ADMIN',
+    name: 'ayansh',
     district: 'Korba',
     body: 'Municipal Corporation Korba',
     ward: 14,
@@ -284,15 +466,53 @@ if (!reports.length) {
     tier: 'standard',
     at: Date.now() - 3600000
   }];
+  ls.set('up_reports', JSON.stringify(reports));
 }
 
 let photo = null;
-let loc = { lat: 22.3600, lng: 82.7500, dist: 'Korba', body: 'Municipal Corporation Korba', ward: 14 };
+let loc = { lat: 22.3600, lng: 82.7500, dist: 'Korba', body: 'Municipal Corporation Korba', email: 'corporationkorba@gmail.com', ward: 14 };
+
+function findDist(name) {
+  return districts.find(d => d.dist.toLowerCase() === String(name || '').toLowerCase()) || districts[0] || DEFAULT_DISTRICTS[0];
+}
+
+function populateDistrictSelects() {
+  const opts = districts.map(d => `<option value="${d.dist}">${d.dist} (${d.body})</option>`).join('');
+  const simpleOpts = districts.map(d => `<option value="${d.dist}">${d.dist}</option>`).join('');
+  
+  const curAd = $('ad').value;
+  const curLdist = $('ldist').value;
+  const curFd = $('fd').value;
+
+  $('ad').innerHTML = simpleOpts;
+  $('ldist').innerHTML = opts;
+  $('er-dist').innerHTML = simpleOpts;
+  $('eu-dist').innerHTML = simpleOpts;
+  $('fd').innerHTML = `<option value="">All Chhattisgarh Districts (${districts.length})</option>` + simpleOpts;
+
+  if (curAd) $('ad').value = curAd;
+  if (curLdist) $('ldist').value = curLdist;
+  if (curFd) $('fd').value = curFd;
+}
+
+// Show/Hide password toggle
+$('pw-eye').onclick = () => {
+  const inp = $('apass');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+};
 
 function checkAuth() {
-  if (!acct || !acct.name) {
+  populateDistrictSelects();
+  if (!acct || !acct.name || !acct.pass) {
     $('onb').hidden = false;
   } else {
+    // Re-verify if claiming to be ayansh
+    if (acct.name.toLowerCase() === SUPER_ADMIN_USER && acct.pass !== SUPER_ADMIN_PASS) {
+      acct = null;
+      ls.set('up_acct', 'null');
+      $('onb').hidden = false;
+      return;
+    }
     $('onb').hidden = true;
     boot();
   }
@@ -300,36 +520,74 @@ function checkAuth() {
 
 $('acreate').onclick = () => {
   const name = $('an').value.trim();
-  const dist = $('ad').value || 'Korba';
+  const pass = $('apass').value;
+  const dist = $('ad').value || (districts[0] && districts[0].dist) || 'Korba';
   const contact = $('ac').value.trim();
+
   if (name.length < 2) {
-    $('aerr').textContent = 'Please enter your name (at least 2 characters).';
+    $('aerr').textContent = '❌ Please enter your name (at least 2 characters).';
     return;
   }
-  $('aerr').textContent = '';
-  acct = { uid, name, district: dist, contact };
+  if (!pass) {
+    $('aerr').textContent = '❌ Please enter a password.';
+    return;
+  }
+
+  // Strict check for Super-Admin ayansh
+  if (name.toLowerCase() === SUPER_ADMIN_USER) {
+    if (pass !== SUPER_ADMIN_PASS) {
+      $('aerr').textContent = '❌ Incorrect password for Super-Admin ayansh!';
+      return;
+    }
+  }
+
+  let existing = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+  if (existing) {
+    if (existing.pass !== pass && name.toLowerCase() !== SUPER_ADMIN_USER) {
+      $('aerr').textContent = '❌ Incorrect password for this existing account!';
+      return;
+    }
+    existing.district = dist;
+    if (contact) existing.contact = contact;
+    if (name.toLowerCase() === SUPER_ADMIN_USER) existing.pass = SUPER_ADMIN_PASS;
+    acct = existing;
+  } else {
+    acct = {
+      uid: 'U-' + Math.random().toString(36).slice(2, 9).toUpperCase(),
+      name,
+      pass,
+      district: dist,
+      contact: contact || 'Verified Citizen',
+      bonus: 0
+    };
+    users.push(acct);
+  }
+
+  ls.set('up_users', JSON.stringify(users));
   ls.set('up_acct', JSON.stringify(acct));
-  
-  const dc = DIST_COORDS[dist] || DIST_COORDS.Korba;
-  loc.dist = dist;
-  loc.body = dc.body;
-  loc.lat = dc.lat;
-  loc.lng = dc.lng;
+  $('aerr').textContent = '';
+
+  const dc = findDist(dist);
+  loc = { dist: dc.dist, body: dc.body, email: dc.email, lat: dc.lat, lng: dc.lng, ward: loc.ward || 14 };
 
   $('onb').hidden = true;
   boot();
 };
 
 $('switch-acct').onclick = () => {
+  populateDistrictSelects();
   if (acct) {
     $('an').value = acct.name || '';
+    $('apass').value = '';
     $('ad').value = acct.district || 'Korba';
     $('ac').value = acct.contact || '';
   }
+  $('aerr').textContent = '';
   $('onb').hidden = false;
 };
 
 $('locbtn').onclick = () => {
+  populateDistrictSelects();
   $('ldist').value = loc.dist;
   $('lward').value = loc.ward;
   $('locmod').hidden = false;
@@ -338,8 +596,8 @@ $('loccancel').onclick = () => { $('locmod').hidden = true; };
 $('locsave').onclick = () => {
   const d = $('ldist').value;
   const w = Math.max(1, parseInt($('lward').value, 10) || 1);
-  const dc = DIST_COORDS[d] || DIST_COORDS.Korba;
-  loc = { dist: d, ward: w, body: dc.body, lat: dc.lat, lng: dc.lng };
+  const dc = findDist(d);
+  loc = { dist: dc.dist, ward: w, body: dc.body, email: dc.email, lat: dc.lat, lng: dc.lng };
   $('loctxt').textContent = `${loc.dist} · W${loc.ward}`;
   $('gpsline').textContent = `📍 Coordinates: ${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)} (${loc.dist})`;
   $('locmod').hidden = true;
@@ -347,11 +605,40 @@ $('locsave').onclick = () => {
   if (map3d) map3d.flyTo({ center: [loc.lng, loc.lat], zoom: 13 });
 };
 
+function updateBannerDisplay() {
+  const msg = ls.get('up_banner') || '';
+  const el = $('sys-banner');
+  if (msg.trim()) {
+    el.textContent = '📢 ' + msg;
+    el.hidden = false;
+  } else {
+    el.hidden = true;
+  }
+  if ($('adm-banner-in')) $('adm-banner-in').value = msg;
+}
+
+$('adm-banner-save').onclick = () => {
+  ls.set('up_banner', $('adm-banner-in').value.trim());
+  updateBannerDisplay();
+};
+
 function boot() {
-  const isAdm = _chkAdm(acct.name);
+  populateDistrictSelects();
+  updateBannerDisplay();
+  const isAdm = isSuperAdmin(acct);
   $('adm-badge').hidden = !isAdm;
   $('tab-adm').hidden = !isAdm;
-  $('prof-name').textContent = isAdm ? `${acct.name} (Verified Super-Admin)` : acct.name;
+
+  // If current tab was admin and user is not admin, switch to Report tab
+  if (!isAdm && !$('t-adm').hidden) {
+    document.querySelector('nav button[data-t="rep"]').click();
+  }
+
+  const dc = findDist(loc.dist);
+  loc.body = dc.body;
+  loc.email = dc.email;
+
+  $('prof-name').textContent = isAdm ? `${acct.name} (⚡ Verified Super-Admin)` : acct.name;
   $('prof-meta').textContent = `${acct.district} · ${acct.contact || 'Verified Citizen'}`;
   $('loctxt').textContent = `${loc.dist} · W${loc.ward}`;
   $('gpsline').textContent = `📍 Coordinates: ${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)} (${loc.dist})`;
@@ -363,8 +650,9 @@ function updateRoutingPreview() {
   const cat = $('cat').value;
   const isEm = cat === 'custom' ? $('custom-em').checked : ['open_manhole','downed_power_line','road_collapse'].includes(cat);
   $('custom-wrap').hidden = cat !== 'custom';
+  const dc = findDist(loc.dist);
   $('prev').className = 'route' + (isEm ? ' em' : '');
-  $('prev').innerHTML = `<b>${isEm ? '🚨 Emergency Municipal Alert' : '📬 Standard Municipal Route'}</b>Target: ${loc.body} (${loc.dist}), Ward ${loc.ward}<br><span class="mute">Auto-dispatches official email via UrbanPulse Backend</span>`;
+  $('prev').innerHTML = `<b>${isEm ? '🚨 Emergency Municipal Alert' : '📬 Standard Municipal Route'}</b>Target: ${dc.body} (${dc.dist}), Ward ${loc.ward}<br><span class="mute">Official Dispatch Email: ${dc.email || 'uaddatacenter@gmail.com'} ${dc.phone ? '· 📞 ' + dc.phone : ''}</span>`;
 }
 $('cat').onchange = updateRoutingPreview;
 $('custom-em').onchange = updateRoutingPreview;
@@ -404,6 +692,7 @@ $('send').onclick = async () => {
   const cat = $('cat').value;
   const isEm = cat === 'custom' ? $('custom-em').checked : ['open_manhole','downed_power_line','road_collapse'].includes(cat);
   const label = cat === 'custom' ? ($('custom-title').value.trim() || 'Custom Civic Hazard') : $('cat').options[$('cat').selectedIndex].text;
+  const dc = findDist(loc.dist);
 
   const btn = $('send');
   btn.disabled = true;
@@ -411,10 +700,11 @@ $('send').onclick = async () => {
 
   const payload = {
     id: 'UP-' + Date.now().toString(36).toUpperCase(),
-    uid,
+    uid: acct ? acct.uid : 'U-ANON',
     name: acct ? acct.name : 'Citizen',
-    district: loc.dist,
-    body: loc.body,
+    district: dc.dist,
+    body: dc.body,
+    toEmail: dc.email,
     ward: loc.ward,
     categoryLabel: label,
     notes: $('notes').value.trim(),
@@ -426,7 +716,7 @@ $('send').onclick = async () => {
     at: Date.now()
   };
 
-  let emailMsg = 'Routed to Municipal Server';
+  let emailMsg = `Routed to ${dc.email || dc.body}`;
   try {
     const res = await fetch('/api/report', {
       method: 'POST',
@@ -435,13 +725,13 @@ $('send').onclick = async () => {
     });
     const data = await res.json();
     if (res.ok && data.ok) {
-      const toList = (data.dispatch && data.dispatch.email && data.dispatch.email.to) ? data.dispatch.email.to.join(', ') : 'Municipal Authorities';
+      const toList = (data.dispatch && data.dispatch.email && data.dispatch.email.to) ? data.dispatch.email.to.join(', ') : dc.email;
       emailMsg = `Automated email sent to ${toList}`;
     } else {
-      emailMsg = `Recorded locally (${data.error || 'Backend offline'})`;
+      emailMsg = `Saved & routed (${data.error || 'Local Queue'})`;
     }
   } catch (err) {
-    emailMsg = 'Saved locally & queued for Municipal Dispatch';
+    emailMsg = `Saved & queued for ${dc.email}`;
   }
 
   reports.unshift(payload);
@@ -457,6 +747,7 @@ $('send').onclick = async () => {
   if (map3d) updateMapMarkers();
 };
 
+// 3D Map Logic
 let map3d = null, markers = [];
 function initMap() {
   if (map3d || typeof maplibregl === 'undefined') return;
@@ -495,10 +786,11 @@ $('map-pitch').onclick = () => {
   if (map3d) map3d.easeTo({ pitch: map3d.getPitch() > 20 ? 0 : 50 });
 };
 
+// Report Actions (Mark Fixed, Edit, Delete)
 window.markFixed = id => {
   const r = reports.find(x => x.id === id);
   if (r) {
-    r.status = 'closed';
+    r.status = r.status === 'closed' ? 'open' : 'closed';
     ls.set('up_reports', JSON.stringify(reports));
     renderAll();
     updateMapMarkers();
@@ -512,18 +804,197 @@ window.delRep = id => {
   updateMapMarkers();
 };
 
+window.openEditRep = id => {
+  const r = reports.find(x => x.id === id);
+  if (!r) return;
+  populateDistrictSelects();
+  $('er-id').value = r.id;
+  $('er-cat').value = r.categoryLabel || '';
+  $('er-dist').value = r.district || 'Korba';
+  $('er-ward').value = r.ward || 1;
+  $('er-tier').value = r.tier || 'standard';
+  $('er-status').value = r.status || 'open';
+  $('er-name').value = r.name || '';
+  $('er-notes').value = r.notes || '';
+  $('editrepmod').hidden = false;
+};
+
+$('er-cancel').onclick = () => { $('editrepmod').hidden = true; };
+$('er-save').onclick = () => {
+  const id = $('er-id').value;
+  const r = reports.find(x => x.id === id);
+  if (!r) return;
+  const dc = findDist($('er-dist').value);
+  r.categoryLabel = $('er-cat').value.trim() || 'Civic Hazard';
+  r.district = dc.dist;
+  r.body = dc.body;
+  r.ward = Math.max(1, parseInt($('er-ward').value, 10) || 1);
+  r.tier = $('er-tier').value;
+  r.status = $('er-status').value;
+  r.name = $('er-name').value.trim() || 'Citizen';
+  r.notes = $('er-notes').value.trim();
+
+  ls.set('up_reports', JSON.stringify(reports));
+  $('editrepmod').hidden = true;
+  renderAll();
+  updateMapMarkers();
+};
+
+$('adm-clear-reps').onclick = () => {
+  if (confirm('Are you sure you want to delete ALL reports?')) {
+    reports = [];
+    ls.set('up_reports', JSON.stringify(reports));
+    renderAll();
+    updateMapMarkers();
+  }
+};
+
+// District Management Actions (Add / Edit / Delete / Reset)
+$('d-save').onclick = () => {
+  const dist = $('d-name').value.trim();
+  const body = $('d-body').value.trim();
+  const email = $('d-email').value.trim() || 'uaddatacenter@gmail.com';
+  const phone = $('d-phone').value.trim();
+  const lat = parseFloat($('d-lat').value) || 22.36;
+  const lng = parseFloat($('d-lng').value) || 82.75;
+  const idx = parseInt($('edit-dist-idx').value, 10);
+
+  if (!dist || !body) {
+    alert('Please enter both District Name and Municipal Corporation Name.');
+    return;
+  }
+
+  const item = { dist, body, email, phone, lat, lng };
+  if (idx >= 0 && idx < districts.length) {
+    districts[idx] = item;
+  } else {
+    districts.push(item);
+  }
+
+  ls.set('up_districts', JSON.stringify(districts));
+  resetDistForm();
+  populateDistrictSelects();
+  updateRoutingPreview();
+  renderAll();
+};
+
+function resetDistForm() {
+  $('edit-dist-idx').value = '-1';
+  $('dist-form-title').textContent = '➕ Add New District & Municipal Body';
+  $('d-name').value = '';
+  $('d-body').value = '';
+  $('d-email').value = '';
+  $('d-phone').value = '';
+  $('d-lat').value = '';
+  $('d-lng').value = '';
+  $('d-cancel').hidden = true;
+}
+$('d-cancel').onclick = resetDistForm;
+
+window.editDist = idx => {
+  const d = districts[idx];
+  if (!d) return;
+  $('edit-dist-idx').value = idx;
+  $('dist-form-title').textContent = `✏️ Editing District: ${d.dist}`;
+  $('d-name').value = d.dist;
+  $('d-body').value = d.body;
+  $('d-email').value = d.email || '';
+  $('d-phone').value = d.phone || '';
+  $('d-lat').value = d.lat;
+  $('d-lng').value = d.lng;
+  $('d-cancel').hidden = false;
+};
+
+window.delDist = idx => {
+  if (districts.length <= 1) {
+    alert('At least 1 district must remain in the platform.');
+    return;
+  }
+  districts.splice(idx, 1);
+  ls.set('up_districts', JSON.stringify(districts));
+  populateDistrictSelects();
+  updateRoutingPreview();
+  renderAll();
+};
+
+$('adm-dist-reset').onclick = () => {
+  districts = JSON.parse(JSON.stringify(DEFAULT_DISTRICTS));
+  ls.set('up_districts', JSON.stringify(districts));
+  populateDistrictSelects();
+  updateRoutingPreview();
+  renderAll();
+};
+
+// User Management Actions
+window.openEditUser = idx => {
+  const u = users[idx];
+  if (!u) return;
+  populateDistrictSelects();
+  $('eu-idx').value = idx;
+  $('eu-name').value = u.name;
+  $('eu-pass').value = u.pass || '';
+  $('eu-dist').value = u.district || 'Korba';
+  $('eu-contact').value = u.contact || '';
+  $('eu-bonus').value = u.bonus || 0;
+  $('editusermod').hidden = false;
+};
+
+$('eu-cancel').onclick = () => { $('editusermod').hidden = true; };
+$('eu-save').onclick = () => {
+  const idx = parseInt($('eu-idx').value, 10);
+  const u = users[idx];
+  if (!u) return;
+  u.name = $('eu-name').value.trim() || u.name;
+  u.pass = $('eu-pass').value || u.pass;
+  u.district = $('eu-dist').value || 'Korba';
+  u.contact = $('eu-contact').value.trim();
+  u.bonus = parseInt($('eu-bonus').value, 10) || 0;
+
+  // Keep Super-Admin ayansh password locked to 231238
+  if (u.name.toLowerCase() === SUPER_ADMIN_USER) {
+    u.pass = SUPER_ADMIN_PASS;
+  }
+
+  ls.set('up_users', JSON.stringify(users));
+  if (acct && acct.uid === u.uid) {
+    acct = u;
+    ls.set('up_acct', JSON.stringify(acct));
+  }
+  $('editusermod').hidden = true;
+  renderAll();
+};
+
+window.delUser = idx => {
+  const u = users[idx];
+  if (!u) return;
+  if (u.name.toLowerCase() === SUPER_ADMIN_USER) {
+    alert('Cannot delete the primary Super-Admin account (ayansh).');
+    return;
+  }
+  users.splice(idx, 1);
+  ls.set('up_users', JSON.stringify(users));
+  renderAll();
+};
+
 function renderCard(r) {
-  const isAdm = acct && _chkAdm(acct.name);
-  const fixedBtn = ((r.uid === uid || isAdm) && r.status === 'open')
-    ? `<button type="button" class="alt sm" onclick="markFixed('${r.id}')">✅ Mark Fixed</button>` : '';
+  const isAdm = isSuperAdmin(acct);
+  const isOwner = acct && (r.uid === acct.uid || r.name.toLowerCase() === acct.name.toLowerCase());
+  const toggleBtn = (isOwner || isAdm)
+    ? `<button type="button" class="alt sm" onclick="markFixed('${r.id}')">${r.status === 'closed' ? '🔄 Reopen' : '✅ Mark Fixed'}</button>` : '';
+  const editBtn = isAdm
+    ? `<button type="button" class="admin-btn sm" onclick="openEditRep('${r.id}')">✏️ Edit</button>` : '';
   const delBtn = isAdm
     ? `<button type="button" class="danger sm" onclick="delRep('${r.id}')">🗑️ Delete</button>` : '';
+
   return `<div class="card">
-    <div><b>${r.categoryLabel}</b> <span class="tag${r.tier === 'emergency' ? ' em' : ''}">${r.tier}</span> <span class="tag${r.status === 'closed' ? ' ok' : ''}">${r.status}</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
+      <div><b>${r.categoryLabel}</b> <span class="tag${r.tier === 'emergency' ? ' em' : ''}">${r.tier}</span> <span class="tag${r.status === 'closed' ? ' ok' : ''}">${r.status}</span></div>
+      <span class="mute" style="font-size:.76rem">#${r.id}</span>
+    </div>
     ${r.photo ? `<img src="${r.photo}" alt="Hazard photo">` : ''}
     <p style="margin:6px 0">${r.notes || 'No extra details provided.'}</p>
     <div class="mute">📍 ${r.body}, Ward ${r.ward} (${r.district}) · by <b>${r.name}</b></div>
-    ${(fixedBtn || delBtn) ? `<div class="row" style="margin-top:8px">${fixedBtn}${delBtn}</div>` : ''}
+    ${(toggleBtn || editBtn || delBtn) ? `<div class="row" style="margin-top:8px">${toggleBtn}${editBtn}${delBtn}</div>` : ''}
   </div>`;
 }
 
@@ -532,25 +1003,65 @@ function renderAll() {
   const fd = $('fd').value;
   const fReps = reports.filter(r => !fd || r.district === fd);
   $('feed').innerHTML = fReps.length ? fReps.map(renderCard).join('') : '<p class="mute">No reports found for this district.</p>';
-  
-  const myReps = reports.filter(r => r.uid === uid || r.name.toLowerCase() === acct.name.toLowerCase());
+
+  const myReps = reports.filter(r => r.uid === acct.uid || r.name.toLowerCase() === acct.name.toLowerCase());
   $('mine').innerHTML = myReps.length ? myReps.map(renderCard).join('') : '<p class="mute">No reports submitted by you yet.</p>';
 
+  // Calculate Leaderboard (Report points + Admin bonus points)
   const pts = {};
+  users.forEach(u => {
+    if (u.bonus) pts[u.name] = (pts[u.name] || 0) + (+u.bonus || 0);
+  });
   reports.forEach(r => {
     pts[r.name] = (pts[r.name] || 0) + (r.tier === 'emergency' ? 50 : 20);
   });
+
   $('lbl').innerHTML = Object.entries(pts).sort((a, b) => b[1] - a[1]).map(([n, p], i) => `
     <div class="lb${n.toLowerCase() === acct.name.toLowerCase() ? ' me' : ''}">
       <span class="rk">#${i + 1}</span>
-      <span class="nm"><b>${n}</b></span>
+      <span class="nm"><b>${n}</b> ${n.toLowerCase() === SUPER_ADMIN_USER ? '<span class="badge-admin">Admin</span>' : ''}</span>
       <span class="p">${p} pts</span>
     </div>`).join('') || '<p class="mute">No points recorded yet.</p>';
 
-  if (_chkAdm(acct.name)) {
+  // Render Super-Admin Tables & Stats
+  if (isSuperAdmin(acct)) {
     $('st-reps').textContent = reports.length;
+    $('st-open').textContent = reports.filter(r => r.status === 'open').length;
     $('st-em').textContent = reports.filter(r => r.tier === 'emergency').length;
-    $('adm-reps-list').innerHTML = reports.map(renderCard).join('');
+    $('st-dists').textContent = districts.length;
+    $('st-users').textContent = users.length;
+
+    $('adm-dist-tbody').innerHTML = districts.map((d, i) => `
+      <tr>
+        <td><b>${d.dist}</b></td>
+        <td>${d.body}</td>
+        <td>${d.email || '-'}<br><span class="mute">${d.phone || ''}</span></td>
+        <td class="mute">${(+d.lat).toFixed(2)}, ${(+d.lng).toFixed(2)}</td>
+        <td>
+          <div style="display:flex;gap:4px">
+            <button type="button" class="alt sm" onclick="editDist(${i})">✏️</button>
+            <button type="button" class="danger sm" onclick="delDist(${i})">🗑️</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+    $('adm-user-tbody').innerHTML = users.map((u, i) => `
+      <tr>
+        <td><b>${u.name}</b> ${u.name.toLowerCase() === SUPER_ADMIN_USER ? '⚡' : ''}</td>
+        <td>${u.district || '-'}<br><span class="mute">${u.contact || ''}</span></td>
+        <td><code>${u.pass || ''}</code></td>
+        <td><b>${u.bonus || 0}</b></td>
+        <td>
+          <div style="display:flex;gap:4px">
+            <button type="button" class="alt sm" onclick="openEditUser(${i})">✏️</button>
+            ${u.name.toLowerCase() !== SUPER_ADMIN_USER ? `<button type="button" class="danger sm" onclick="delUser(${i})">🗑️</button>` : ''}
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+    $('adm-reps-list').innerHTML = reports.length ? reports.map(renderCard).join('') : '<p class="mute">No reports in system.</p>';
   }
 }
 
