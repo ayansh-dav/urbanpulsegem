@@ -1,69 +1,12 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const nodemailer = require('nodemailer');
-const serverless = require('serverless-http');
-
-const app = express();
-app.use(cors());
-app.use(express.json({ limit: '12mb' }));
-
-const SENDER = process.env.SENDER_EMAIL || 'alexisanshu12r@gmail.com';
-const APP_PASS = (process.env.GMAIL_APP_PASSWORD || 'emus bijt gjng llrz').replace(/\s+/g, '');
-const DRY_RUN = process.env.DRY_RUN === 'true';
-
-const mail = nodemailer.createTransport({
-  service: 'gmail',
-  auth: { user: SENDER, pass: APP_PASS }
-});
-
-const router = express.Router();
-
-router.get('/bootstrap', (req, res) => {
-  res.json({ visits: 1, directory: [], reports: [], users: [] });
-});
-
-router.post('/report', async (req, res) => {
-  try {
-    const b = req.body;
-    const id = 'UP-' + Date.now().toString(36).toUpperCase();
-    const targetEmails = ['corporationkorba@gmail.com', SENDER];
-    
-    const r = {
-      id,
-      name: b.name || 'Citizen',
-      district: b.district || 'Korba',
-      body: b.body || 'Municipal Corporation Korba',
-      ward: +b.ward || 1,
-      categoryLabel: b.categoryLabel || 'Civic Hazard',
-      notes: String(b.notes || ''),
-      lat: +b.lat || 22.36,
-      lng: +b.lng || 82.75,
-      photo: b.photo || null,
-      status: 'open',
-      tier: b.tier || 'standard',
-      to: targetEmails,
-      at: Date.now()
-    };
-
-    let emailStatus = 'sent';
-    if (!DRY_RUN) {
-      await mail.sendMail({
-        from: `UrbanPulse Chhattisgarh <${SENDER}>`,
-        to: targetEmails.join(','),
-        subject: `[Urgent Civic Report] ${r.categoryLabel} (${r.id})`,
-        html: `<h3>New Hazard Reported</h3><p><b>Location:</b> Ward ${r.ward}, ${r.district}</p><p><b>Details:</b> ${r.notes}</p>`,
-        attachments: r.photo ? [{ filename: 'hazard.jpg', path: r.photo, cid: 'hazard' }] : []
-      });
-    } else {
-      emailStatus = 'dry-run';
-    }
-
-    res.json({ ok: true, report: r, dispatch: { email: { to: targetEmails, status: emailStatus } } });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+{
+  "name": "urbanpulse-backend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "cors": "2.8.5",
+    "dotenv": "16.4.5",
+    "express": "4.19.2",
+    "nodemailer": "6.9.13",
+    "serverless-http": "3.2.0"
   }
-});
-
-app.use('/api', router);
-module.exports.handler = serverless(app);
+}
