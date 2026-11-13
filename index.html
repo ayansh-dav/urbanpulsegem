@@ -1,151 +1,826 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>UrbanPulse: Chhattisgarh 3D Civic Hazard Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<title>UrbanPort — Civic Telemetry & Municipal Dispatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <style>
-:root{
-  --bg:#f2f4f1;--panel:#ffffff;--ink:#14232b;--mute:#5b6b72;--line:#d3dbd8;
-  --brand:#0f5257;--bi:#ffffff;--warn:#b3261e;--wbg:#fdebe9;--ok:#2d6a3e;
-  --admin:#5c2d91;--admin-bg:#f3eef9;
-  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
+:root {
+  --bg: #f4f2ec;
+  --bg-subtle: #eae6dc;
+  --surface: rgba(255, 255, 255, 0.88);
+  --surface-solid: #ffffff;
+  --ink: #121619;
+  --ink-soft: #4a545c;
+  --mute: #76828a;
+  --line: rgba(18, 22, 25, 0.11);
+  --line-strong: rgba(18, 22, 25, 0.22);
+  --brand: #0c4a4e;
+  --brand-bright: #14747a;
+  --accent: #e04f26;
+  --warn: #d92d20;
+  --warn-bg: #fef3f2;
+  --ok: #067647;
+  --ok-bg: #ecfdf3;
+  --admin: #5925dc;
+  --admin-bg: #f4f3ff;
+  --shadow-sm: 0 2px 8px rgba(18, 22, 25, 0.05);
+  --shadow-md: 0 12px 32px -8px rgba(18, 22, 25, 0.1);
+  --shadow-lg: 0 24px 48px -12px rgba(18, 22, 25, 0.18);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif}
-.app{max-width:820px;margin:0 auto;padding-bottom:140px}
-header{position:sticky;top:0;z-index:15;background:var(--brand);color:var(--bi);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-header h1{margin:0 0 0 auto;font-size:1.15rem;display:flex;align-items:center;gap:6px}
-#locbtn{display:flex;align-items:center;gap:6px;max-width:58%;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);color:inherit;border-radius:20px;padding:6px 12px;cursor:pointer;font-weight:700;text-align:left}
-#locbtn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.badge-admin{background:#ffb703;color:#14232b;font-size:.72rem;padding:2px 7px;border-radius:10px;font-weight:700;text-transform:uppercase}
-#sys-banner{background:#fff3cd;color:#664d03;padding:8px 14px;font-size:.88rem;border-bottom:1px solid #ffecb5;font-weight:700;text-align:center}
-nav{display:flex;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:52px;z-index:14;overflow-x:auto}
-nav button{flex:1;min-width:max-content;background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);padding:11px 10px;font-size:.92rem;cursor:pointer;font-weight:700}
-nav button[aria-selected=true]{color:var(--ink);border-color:var(--brand)}
-nav button.admin-tab{color:var(--admin)}
-nav button.admin-tab[aria-selected=true]{border-color:var(--admin);background:var(--admin-bg)}
-section{padding:14px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:12px}
-h2{margin:0 0 8px;font-size:1.08rem}
-h3{margin:0 0 8px;font-size:.98rem;color:var(--admin)}
-label{display:block;font-size:.88rem;color:var(--mute);margin:10px 0 3px}
-input,select,textarea,button{font:inherit;color:inherit}
-input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}
-button{padding:9px 14px;border:1px solid var(--brand);background:var(--brand);color:var(--bi);border-radius:5px;cursor:pointer;font-weight:700}
-button:disabled{opacity:.6;cursor:not-allowed}
-button.alt{background:transparent;color:var(--ink);border-color:var(--line)}
-button.danger{background:var(--warn);border-color:var(--warn);color:#fff}
-button.admin-btn{background:var(--admin);border-color:var(--admin);color:#fff}
-button.sm{padding:5px 10px;font-size:.82rem}
-.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
-.mute{color:var(--mute);font-size:.86rem}
-.route{border-left:5px solid var(--brand);background:var(--bg);padding:10px 12px;margin-top:12px;border-radius:0 5px 5px 0;word-break:break-word}
-.route.em{border-color:var(--warn);background:var(--wbg)}.route b{display:block}
-.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:.78rem;border:1px solid var(--line)}
-.tag.em{background:var(--warn);color:#fff;border-color:var(--warn)}
-.tag.ok{color:var(--ok);border-color:var(--ok)}
-.card img{width:100%;max-height:260px;object-fit:cover;border-radius:6px;margin:8px 0;background:var(--line)}
-.lb{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}.lb:first-of-type{border-top:0}
-.lb .rk{width:2.4ch;font-weight:700}.lb .nm{flex:1}.lb.me{background:var(--bg);margin:0 -8px;padding:9px 8px;border-radius:4px}.lb .p{font-weight:700;color:var(--brand)}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:12px}
-.stat-box{background:var(--bg);padding:10px;border-radius:6px;border:1px solid var(--line);text-align:center}
-.stat-box b{display:block;font-size:1.35rem;color:var(--brand)}
-#map3d{width:100%;height:460px;border-radius:8px;border:1px solid var(--line);overflow:hidden}
-.map-marker{width:22px;height:22px;border-radius:50%;border:3px solid #fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}
-.map-marker.em{background:#e63946;animation:pulse 1.4s infinite}
-.map-marker.std{background:#f4a261}
-.map-marker.ok{background:#2a9d8f}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(230,57,70,.7)}70%{box-shadow:0 0 0 12px rgba(230,57,70,0)}100%{box-shadow:0 0 0 0 rgba(230,57,70,0)}}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}
-.modal[hidden]{display:none !important}
-.modal>div{background:var(--panel);width:100%;max-width:500px;border-radius:12px;padding:20px;max-height:90vh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-.tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.84rem}
-th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
-th{color:var(--mute);font-weight:700;background:var(--bg)}
-.pw-wrap{position:relative;display:flex;align-items:center}
-.pw-wrap input{padding-right:44px}
-.pw-toggle{position:absolute;right:6px;background:none;border:0;color:var(--mute);padding:4px 8px;font-size:.85rem;cursor:pointer}
+
+[data-theme="dark"] {
+  --bg: #0b0e11;
+  --bg-subtle: #13181d;
+  --surface: rgba(22, 27, 34, 0.86);
+  --surface-solid: #161b22;
+  --ink: #f0f4f8;
+  --ink-soft: #9fb0bf;
+  --mute: #687785;
+  --line: rgba(240, 244, 248, 0.1);
+  --line-strong: rgba(240, 244, 248, 0.22);
+  --brand: #2dd4bf;
+  --brand-bright: #14b8a6;
+  --accent: #ff6b42;
+  --warn: #f97066;
+  --warn-bg: rgba(217, 45, 32, 0.15);
+  --ok: #32d583;
+  --ok-bg: rgba(6, 118, 71, 0.16);
+  --admin: #a48afb;
+  --admin-bg: rgba(89, 37, 220, 0.18);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 14px 34px -8px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 28px 56px -12px rgba(0, 0, 0, 0.75);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image: 
+    radial-gradient(at 12% 8%, rgba(20, 116, 122, 0.08) 0px, transparent 45%),
+    radial-gradient(at 88% 15%, rgba(224, 79, 38, 0.06) 0px, transparent 45%),
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+  color: var(--ink);
+  font: 15.5px/1.55 "Plus Jakarta Sans", -apple-system, sans-serif;
+  transition: background-color 0.4s var(--spring), color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Ambient Floating Top Glow */
+.ambient-orb {
+  position: fixed;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 680px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.16) 0%, rgba(224, 79, 38, 0.08) 50%, transparent 75%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+  animation: floatOrb 10s ease-in-out infinite alternate;
+}
+@keyframes floatOrb {
+  0% { transform: translateX(-55%) scale(1); }
+  100% { transform: translateX(-45%) scale(1.12); }
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
+  margin: 0 auto;
+  padding-bottom: 130px;
+}
+
+/* Tactile Glass Header */
+header {
+  position: sticky;
+  top: 12px;
+  z-index: 25;
+  margin: 12px 14px 0;
+  background: var(--surface);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--line-strong);
+  border-radius: 100px;
+  padding: 8px 12px 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: var(--shadow-md);
+  animation: slideDownHeader 0.65s var(--spring);
+}
+@keyframes slideDownHeader {
+  from { opacity: 0; transform: translateY(-28px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#locbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 48%;
+  background: var(--bg-subtle);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  border-radius: 100px;
+  padding: 7px 14px 7px 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.25s var(--bounce);
+}
+#locbtn:hover {
+  transform: translateY(-1px) scale(1.02);
+  border-color: var(--brand);
+  box-shadow: var(--shadow-sm);
+}
+#locbtn:active { transform: scale(0.96); }
+#locbtn .sonar {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #10b981;
+  position: relative;
+  flex-shrink: 0;
+}
+#locbtn .sonar::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid #10b981;
+  animation: sonarPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes sonarPing {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+#loctxt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.brand-logo .port-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0c4a4e, #e04f26);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(224, 79, 38, 0.35);
+  animation: markPulse 4s ease-in-out infinite;
+}
+@keyframes markPulse {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(-6deg) scale(1.06); }
+}
+
+.badge-admin {
+  background: linear-gradient(135deg, #ffb703, #fb8500);
+  color: #111;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  padding: 3px 8px;
+  border-radius: 100px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 10px rgba(251, 133, 0, 0.4);
+  animation: badgeGlow 2s infinite alternate;
+}
+@keyframes badgeGlow {
+  from { box-shadow: 0 0 6px rgba(251, 133, 0, 0.3); }
+  to { box-shadow: 0 0 16px rgba(251, 133, 0, 0.75); }
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-subtle);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.25s var(--bounce), background 0.2s;
+}
+.icon-btn:hover { transform: rotate(14deg) scale(1.08); }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn.spinning { animation: spin360 0.7s linear infinite; }
+@keyframes spin360 { to { transform: rotate(360deg); } }
+
+/* Live State Banner */
+#sys-banner {
+  margin: 12px 14px 0;
+  background: linear-gradient(90deg, #b45309, #d97706, #b45309);
+  background-size: 200% 100%;
+  animation: bannerFlow 6s linear infinite;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+}
+@keyframes bannerFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Floating Pill Navigation Dock */
+nav {
+  position: sticky;
+  top: 76px;
+  z-index: 20;
+  margin: 12px 14px 4px;
+  padding: 5px;
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+  scrollbar-width: none;
+}
+nav::-webkit-scrollbar { display: none; }
+nav button {
+  flex: 1;
+  min-width: max-content;
+  background: transparent;
+  border: 0;
+  border-radius: 11px;
+  color: var(--ink-soft);
+  padding: 9px 13px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s var(--spring);
+  position: relative;
+}
+nav button:hover { color: var(--ink); background: rgba(128,128,128,0.08); }
+nav button[aria-selected="true"] {
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transform: translateY(-1px);
+}
+nav button.admin-tab { color: var(--admin); }
+nav button.admin-tab[aria-selected="true"] {
+  background: linear-gradient(135deg, #5925dc, #7c3aed);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(89, 37, 220, 0.4);
+}
+
+/* Section & Staggered Card Animations */
+section {
+  padding: 12px 14px;
+  animation: sectionFadeIn 0.45s var(--spring);
+}
+@keyframes sectionFadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.32s var(--spring), box-shadow 0.32s var(--spring), border-color 0.25s ease;
+  animation: cardPop 0.5s var(--spring) backwards;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+@keyframes cardPop {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.hero-editorial {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px dashed var(--line-strong);
+}
+.hero-editorial h2 {
+  font-family: "Syne", sans-serif;
+  font-size: 1.45rem;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.hero-editorial .serif-italic {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.65rem;
+  color: var(--accent);
+}
+.mono-pill {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.74rem;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--line-strong);
+  color: var(--ink-soft);
+}
+
+h2 { margin: 0 0 8px; font-family: "Syne", sans-serif; font-size: 1.18rem; letter-spacing: -0.02em; }
+h3 { margin: 0 0 8px; font-size: 0.98rem; color: var(--admin); }
+
+label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  margin: 14px 0 5px;
+}
+
+input, select, textarea, button { font: inherit; color: inherit; }
+input, select, textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-solid);
+  color: var(--ink);
+  transition: all 0.22s var(--spring);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px rgba(20, 116, 122, 0.15);
+  transform: translateY(-1px);
+}
+
+button {
+  padding: 11px 18px;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, var(--brand), var(--brand-bright));
+  color: #fff;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  transition: all 0.25s var(--bounce);
+  position: relative;
+  overflow: hidden;
+}
+[data-theme="dark"] button { color: #081c19; }
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(20, 116, 122, 0.45);
+}
+button:active:not(:disabled) { transform: translateY(0) scale(0.96); }
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+button.cta-dispatch {
+  background: linear-gradient(135deg, #121619 0%, #0c4a4e 55%, #e04f26 100%);
+  background-size: 200% auto;
+  color: #fff !important;
+  font-size: 1rem;
+  padding: 14px 20px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px -5px rgba(224, 79, 38, 0.35);
+  animation: gradientShift 5s ease infinite;
+}
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+button.alt {
+  background: var(--bg-subtle);
+  color: var(--ink) !important;
+  border: 1px solid var(--line-strong);
+}
+button.alt:hover:not(:disabled) {
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-sm);
+}
+button.danger {
+  background: linear-gradient(135deg, #d92d20, #b42318);
+  color: #fff !important;
+}
+button.admin-btn {
+  background: linear-gradient(135deg, #5925dc, #7c3aed);
+  color: #fff !important;
+}
+button.sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 9px; }
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row > * { flex: 1; min-width: 135px; }
+.mute { color: var(--mute); font-size: 0.85rem; }
+
+/* Animated Telemetry Route Box */
+.route {
+  border-left: 4px solid var(--brand);
+  background: var(--bg-subtle);
+  padding: 13px 15px;
+  margin-top: 14px;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  word-break: break-word;
+  transition: all 0.3s var(--spring);
+  position: relative;
+  overflow: hidden;
+}
+.route.em {
+  border-left-color: var(--warn);
+  background: var(--warn-bg);
+  animation: emergencyPulseBox 2s infinite;
+}
+@keyframes emergencyPulseBox {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217, 45, 32, 0.2); }
+  50% { box-shadow: 0 0 0 6px rgba(217, 45, 32, 0); }
+}
+.route b { display: block; font-size: 0.94rem; margin-bottom: 2px; }
+
+/* Status Tags */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-subtle);
+}
+.tag.em {
+  background: var(--warn);
+  color: #fff;
+  border-color: var(--warn);
+  animation: pulse 1.6s infinite;
+}
+.tag.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+  border-color: var(--ok);
+}
+
+.card img {
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  margin: 10px 0;
+  border: 1px solid var(--line);
+  transition: transform 0.35s var(--spring);
+}
+.card img:hover { transform: scale(1.015); }
+
+/* Leaderboard Rows */
+.lb {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 10px;
+  transition: transform 0.25s var(--spring), background 0.2s;
+}
+.lb:hover {
+  transform: translateX(6px);
+  background: var(--bg-subtle);
+}
+.lb .rk {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-subtle);
+  border: 1px solid var(--line-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.lb:nth-child(1) .rk { background: linear-gradient(135deg, #ffd700, #f59e0b); color: #111; border: 0; }
+.lb:nth-child(2) .rk { background: linear-gradient(135deg, #e2e8f0, #94a3b8); color: #111; border: 0; }
+.lb:nth-child(3) .rk { background: linear-gradient(135deg, #fDBA74, #c2410c); color: #fff; border: 0; }
+.lb .nm { flex: 1; }
+.lb.me {
+  background: rgba(20, 116, 122, 0.12);
+  border: 1px solid var(--brand);
+}
+.lb .p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  color: var(--brand);
+  font-size: 0.95rem;
+}
+
+/* Stat Grid */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.stat-box {
+  background: var(--bg-subtle);
+  padding: 14px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  text-align: center;
+  transition: transform 0.25s var(--bounce);
+}
+.stat-box:hover { transform: translateY(-3px); }
+.stat-box b {
+  display: block;
+  font-family: "Syne", sans-serif;
+  font-size: 1.6rem;
+  color: var(--brand);
+}
+
+/* 3D Map Container */
+#map3d {
+  width: 100%;
+  height: 470px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  overflow: hidden;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+}
+.map-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+  transition: transform 0.2s var(--bounce);
+}
+.map-marker:hover { transform: scale(1.3); }
+.map-marker.em { background: #e63946; animation: pulse 1.4s infinite; }
+.map-marker.std { background: #f4a261; }
+.map-marker.ok { background: #10b981; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.75); }
+  70% { box-shadow: 0 0 0 14px rgba(230, 57, 70, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); }
+}
+
+/* Spring Modals */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 14, 17, 0.68);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeBackdrop 0.25s ease;
+}
+.modal[hidden] { display: none !important; }
+@keyframes fadeBackdrop { from { opacity: 0; } to { opacity: 1; } }
+.modal > div {
+  background: var(--surface-solid);
+  border: 1px solid var(--line-strong);
+  width: 100%;
+  max-width: 490px;
+  border-radius: 22px;
+  padding: 24px;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: var(--shadow-lg);
+  animation: modalSpring 0.42s var(--bounce);
+}
+@keyframes modalSpring {
+  from { opacity: 0; transform: translateY(28px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Admin Tables */
+.tbl-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--line-strong); }
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; background: var(--surface-solid); }
+th, td { padding: 10px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+th { color: var(--ink-soft); font-weight: 700; text-transform: uppercase; font-size: 0.73rem; letter-spacing: 0.04em; background: var(--bg-subtle); }
+tr:last-child td { border-bottom: 0; }
+tr:hover td { background: rgba(128,128,128,0.04); }
+
+.pw-wrap { position: relative; display: flex; align-items: center; }
+.pw-wrap input { padding-right: 46px; }
+.pw-toggle {
+  position: absolute;
+  right: 8px;
+  background: transparent !important;
+  border: 0;
+  color: var(--mute) !important;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: none !important;
+}
+
+/* Toast Notification Stack */
+#toast-stack {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 340px;
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastSlideIn 0.4s var(--bounce);
+}
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Particle Burst Canvas */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: particleFly 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes particleFly {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
 </style>
 </head>
 <body>
+<div class="ambient-orb"></div>
+<div id="toast-stack" aria-live="polite"></div>
+
 <div class="app">
   <header>
-    <button id="locbtn" type="button" aria-label="Change location"><span>📍</span><span id="loctxt">Korba · W14</span></button>
-    <h1>UrbanPulse <span id="adm-badge" class="badge-admin" hidden>Super Admin</span></h1>
+    <button id="locbtn" type="button" aria-label="Change active municipal ward">
+      <span class="sonar"></span>
+      <span id="loctxt">Korba · W14</span>
+    </button>
+
+    <div class="brand-wrap">
+      <div class="brand-logo">
+        <span class="port-mark">⚓</span>
+        <span>UrbanPort</span>
+      </div>
+      <span id="adm-badge" class="badge-admin" hidden>Super Admin</span>
+      <button id="sync-btn" type="button" class="icon-btn" title="Live Cloud Sync across all devices">🔄</button>
+      <button id="theme-btn" type="button" class="icon-btn" title="Switch Daylight / Command Night Theme">🌙</button>
+    </div>
   </header>
+
   <div id="sys-banner" hidden></div>
 
   <nav role="tablist">
-    <button role="tab" type="button" data-t="rep" aria-selected="true">Report</button>
-    <button role="tab" type="button" data-t="map" aria-selected="false">3D Map 🌐</button>
-    <button role="tab" type="button" data-t="feed" aria-selected="false">Community</button>
-    <button role="tab" type="button" data-t="lb" aria-selected="false">Leaderboard</button>
-    <button role="tab" type="button" data-t="mine" aria-selected="false">Mine</button>
-    <button role="tab" type="button" data-t="adm" id="tab-adm" class="admin-tab" aria-selected="false" hidden>Admin ⚡</button>
+    <button role="tab" type="button" data-t="rep" aria-selected="true">Dispatch</button>
+    <button role="tab" type="button" data-t="map" aria-selected="false">3D Radar 🌐</button>
+    <button role="tab" type="button" data-t="feed" aria-selected="false">Live Feed</button>
+    <button role="tab" type="button" data-t="lb" aria-selected="false">Civic Ranks</button>
+    <button role="tab" type="button" data-t="mine" aria-selected="false">Dossier</button>
+    <button role="tab" type="button" data-t="adm" id="tab-adm" class="admin-tab" aria-selected="false" hidden>Command ⚡</button>
   </nav>
 
-  <!-- REPORT TAB -->
+  <!-- DISPATCH / REPORT TAB -->
   <section id="t-rep">
     <div class="card">
-      <h2>Report a Civic Hazard</h2>
-      <label for="cat">Hazard Problem Type</label>
+      <div class="hero-editorial">
+        <div>
+          <span class="mono-pill" id="sync-indicator">● CLOUD TELEMETRY LINKED</span>
+          <h2 style="margin-top:8px">Log a Municipal <span class="serif-italic">Hazard</span></h2>
+        </div>
+        <span class="mono-pill" id="gpsline">22.3600° N, 82.7500° E</span>
+      </div>
+
+      <label for="cat">Hazard Classification</label>
       <select id="cat">
-        <option value="pothole">Pothole / Damaged Road</option>
-        <option value="streetlight">Broken Streetlight / Dark Zone</option>
-        <option value="garbage">Garbage Overflow / Filth</option>
-        <option value="water_leak">Water Pipeline Leak</option>
-        <option value="drainage">Clogged Drain / Waterlogging</option>
-        <option value="stray_cattle">Stray Cattle / Traffic Hazard</option>
-        <option value="fallen_tree">Fallen Tree / Blocked Road</option>
-        <option value="encroachment">Illegal Footpath Encroachment</option>
-        <option value="open_manhole">🚨 Open Manhole (Emergency)</option>
-        <option value="downed_power_line">🚨 Downed Power Line / Sparking (Emergency)</option>
-        <option value="road_collapse">🚨 Road Cave-In / Bridge Crack (Emergency)</option>
-        <option value="custom">✏️ Custom Problem</option>
+        <option value="pothole">Pothole / Arterial Road Damage</option>
+        <option value="streetlight">Dark Zone / Streetlight Grid Fault</option>
+        <option value="garbage">Sanitation Overflow / Uncollected Waste</option>
+        <option value="water_leak">Main Pipeline Burst / Water Loss</option>
+        <option value="drainage">Stormwater Drain Blockage / Waterlogging</option>
+        <option value="stray_cattle">Stray Cattle / Highway Obstruction</option>
+        <option value="fallen_tree">Fallen Tree / Severed Access</option>
+        <option value="encroachment">Public Footpath Encroachment</option>
+        <option value="open_manhole">🚨 Open Uncovered Manhole (Emergency)</option>
+        <option value="downed_power_line">🚨 Live Sparking Power Line (Emergency)</option>
+        <option value="road_collapse">🚨 Structural Road Cave-In / Bridge Crack (Emergency)</option>
+        <option value="custom">✏️ Custom Civic Telemetry</option>
       </select>
 
       <div id="custom-wrap" hidden>
-        <label for="custom-title">Custom Problem Title</label>
-        <input id="custom-title" placeholder="e.g. Broken traffic signal">
-        <label for="custom-em"><input type="checkbox" id="custom-em" style="width:auto;margin-right:6px">Mark as Urgent Emergency</label>
+        <label for="custom-title">Custom Hazard Title</label>
+        <input id="custom-title" placeholder="e.g. Malfunctioning railway crossing barrier">
+        <label for="custom-em" style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:.92rem;cursor:pointer">
+          <input type="checkbox" id="custom-em" style="width:18px;height:18px;margin:0">
+          Escalate as Immediate Life-Safety Emergency
+        </label>
       </div>
 
-      <label for="notes">Details & Landmark</label>
-      <textarea id="notes" rows="3" placeholder="Near the landmark, about half a metre wide…"></textarea>
+      <label for="notes">Field Notes & Nearest Landmark</label>
+      <textarea id="notes" rows="3" placeholder="Describe exact spot, severity, and nearby landmark…"></textarea>
 
-      <label>Hazard Photo Evidence</label>
+      <label>Visual Evidence Attachment</label>
       <div class="row">
-        <button type="button" class="alt" id="cam">📷 Take Photo</button>
-        <button type="button" class="alt" id="upl">📁 Upload File</button>
+        <button type="button" class="alt" id="cam">📷 Capture Field Photo</button>
+        <button type="button" class="alt" id="upl">📁 Attach Image File</button>
       </div>
       <input id="fcam" type="file" accept="image/*" capture="environment" hidden>
       <input id="fupl" type="file" accept="image/*" hidden>
-      <img id="pv" alt="Preview" hidden style="width:100%;max-height:220px;object-fit:cover;margin-top:8px;border-radius:6px">
+      <img id="pv" alt="Evidence preview" hidden>
 
-      <p class="mute" id="gpsline" style="margin:10px 0 0">📍 Coordinates: 22.3600, 82.7500 (Korba)</p>
       <div class="route" id="prev"></div>
 
-      <div class="row" style="margin-top:12px">
-        <button type="button" id="send" style="width:100%">🚀 Submit & Auto-Email Corporation</button>
+      <div class="row" style="margin-top:16px">
+        <button type="button" class="cta-dispatch" id="send" style="width:100%">🚀 Transmit & Auto-Email Municipal Authority</button>
       </div>
-      <p class="mute" id="status" style="margin-top:8px;font-weight:700" aria-live="polite"></p>
+      <p class="mute" id="status" style="margin:10px 0 0;font-weight:700;text-align:center" aria-live="polite"></p>
     </div>
   </section>
 
-  <!-- 3D MAP TAB -->
+  <!-- 3D RADAR MAP TAB -->
   <section id="t-map" hidden>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+      <div class="hero-editorial" style="margin-bottom:12px">
         <div>
-          <h2 style="margin:0">Chhattisgarh 3D Live Hazard Map</h2>
-          <p class="mute" style="margin:0">Tap any pin or click map to set hazard coordinates.</p>
+          <h2>UrbanPort 3D <span class="serif-italic">Spatial Radar</span></h2>
+          <p class="mute" style="margin:2px 0 0">Click anywhere on the terrain to lock exact GPS coordinates for your next dispatch.</p>
         </div>
-        <button type="button" class="alt sm" id="map-pitch">Toggle 3D Tilt</button>
+        <button type="button" class="alt sm" id="map-pitch">📐 Toggle 3D Perspective</button>
       </div>
       <div id="map3d"></div>
     </div>
@@ -154,8 +829,13 @@ th{color:var(--mute);font-weight:700;background:var(--bg)}
   <!-- COMMUNITY FEED TAB -->
   <section id="t-feed" hidden>
     <div class="card">
-      <label for="fd" style="margin-top:0">Filter Reports by District</label>
-      <select id="fd"></select>
+      <div class="row" style="align-items:flex-end">
+        <div>
+          <label for="fd" style="margin-top:0">Filter Telemetry by Municipal District</label>
+          <select id="fd"></select>
+        </div>
+        <button type="button" class="alt" id="feed-refresh" style="flex:0 0 auto">🔄 Sync Feed</button>
+      </div>
     </div>
     <div id="feed"></div>
   </section>
@@ -163,86 +843,99 @@ th{color:var(--mute);font-weight:700;background:var(--bg)}
   <!-- LEADERBOARD TAB -->
   <section id="t-lb" hidden>
     <div class="card">
-      <h2>Chhattisgarh Live Civic Leaderboard</h2>
-      <p class="mute" style="margin-top:0">Standard Report = 20 pts · Emergency Alert = 50 pts</p>
+      <div class="hero-editorial">
+        <div>
+          <h2>Civic Impact <span class="serif-italic">Standings</span></h2>
+          <p class="mute" style="margin:2px 0 0">Standard Dispatch = +20 pts · Emergency Escalation = +50 pts</p>
+        </div>
+        <span class="mono-pill">LIVE SYNCED</span>
+      </div>
       <div id="lbl"></div>
     </div>
   </section>
 
-  <!-- MINE TAB -->
+  <!-- CITIZEN DOSSIER TAB -->
   <section id="t-mine" hidden>
-    <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
       <div>
-        <b id="prof-name">Citizen</b>
+        <span class="mono-pill">ACTIVE OPERATIVE DOSSIER</span>
+        <h2 id="prof-name" style="margin:6px 0 2px">Citizen</h2>
         <div class="mute" id="prof-meta">Korba</div>
       </div>
-      <button type="button" class="alt sm" id="switch-acct">🔑 Switch Account / Logout</button>
+      <button type="button" class="alt sm" id="switch-acct">🔑 Switch Operative / Logout</button>
     </div>
     <div id="mine"></div>
   </section>
 
-  <!-- SUPER ADMIN PANEL TAB -->
+  <!-- SUPER ADMIN COMMAND CENTER -->
   <section id="t-adm" hidden>
-    <!-- Overview & Broadcast -->
     <div class="card" style="border:2px solid var(--admin)">
-      <h2 style="color:var(--admin)">⚡ Super-Admin Control Center (Ayansh)</h2>
+      <div class="hero-editorial">
+        <div>
+          <span class="badge-admin">ROOT CLEARANCE · AYANSH</span>
+          <h2 style="color:var(--admin);margin-top:6px">⚡ UrbanPort Central Command</h2>
+        </div>
+        <button type="button" class="admin-btn sm" id="adm-force-sync">☁️ Push State to All Devices</button>
+      </div>
+
       <div class="stat-grid">
-        <div class="stat-box"><b id="st-reps">0</b><span class="mute">Total Reports</span></div>
-        <div class="stat-box"><b id="st-open">0</b><span class="mute">Open Issues</span></div>
+        <div class="stat-box"><b id="st-reps">0</b><span class="mute">Dispatches</span></div>
+        <div class="stat-box"><b id="st-open">0</b><span class="mute">Active Open</span></div>
         <div class="stat-box"><b id="st-em">0</b><span class="mute">Emergencies</span></div>
         <div class="stat-box"><b id="st-dists">0</b><span class="mute">Districts</span></div>
-        <div class="stat-box"><b id="st-users">0</b><span class="mute">Users</span></div>
+        <div class="stat-box"><b id="st-users">0</b><span class="mute">Operatives</span></div>
       </div>
-      <label for="adm-banner-in">📢 Live State-Wide Announcement Banner (Leave blank to hide)</label>
+
+      <label for="adm-banner-in">📢 Live State-Wide Broadcast Ticker (Syncs to all connected devices)</label>
       <div class="row">
-        <input id="adm-banner-in" placeholder="e.g. Heavy monsoon alert in Korba & Raipur — report waterlogging immediately">
-        <button type="button" class="admin-btn sm" id="adm-banner-save" style="flex:0 0 auto">Update Banner</button>
+        <input id="adm-banner-in" placeholder="e.g. Monsoon Emergency Protocol active in Korba & Raipur — report waterlogging immediately">
+        <button type="button" class="admin-btn" id="adm-banner-save" style="flex:0 0 auto">Broadcast Live</button>
       </div>
     </div>
 
     <!-- District & Municipal Directory Manager -->
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-        <h2>🏛️ Manage Districts & Municipal Corporations</h2>
-        <button type="button" class="alt sm" id="adm-dist-reset">Reset Default Districts</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px">
+        <h2>🏛️ Municipal District Registry (Cloud Synced)</h2>
+        <button type="button" class="alt sm" id="adm-dist-reset">Restore Default 8 Districts</button>
       </div>
-      <p class="mute" style="margin-top:0">Add new districts, remove existing ones, or edit municipal emails, phone numbers, and map coordinates.</p>
+      <p class="mute" style="margin-top:0">Any district added, edited, or removed here automatically syncs to the cloud server so every phone and computer sees it immediately.</p>
 
-      <div style="background:var(--admin-bg);padding:12px;border-radius:8px;margin-bottom:14px;border:1px solid var(--line)">
-        <h3 id="dist-form-title">➕ Add / Edit District & Municipal Body</h3>
+      <div style="background:var(--admin-bg);padding:16px;border-radius:var(--radius-md);margin-bottom:16px;border:1px solid var(--line-strong)">
+        <h3 id="dist-form-title">➕ Register / Modify Municipal Jurisdiction</h3>
         <input type="hidden" id="edit-dist-idx" value="-1">
         <div class="row">
           <div>
             <label for="d-name">District Name</label>
-            <input id="d-name" placeholder="e.g. Korba">
+            <input id="d-name" placeholder="e.g. Jagdalpur">
           </div>
           <div>
-            <label for="d-body">Municipal Corporation / Body</label>
-            <input id="d-body" placeholder="e.g. Municipal Corporation Korba">
+            <label for="d-body">Municipal Authority Name</label>
+            <input id="d-body" placeholder="e.g. Municipal Corporation Jagdalpur">
           </div>
         </div>
         <div class="row">
           <div>
             <label for="d-email">Official Dispatch Email(s)</label>
-            <input id="d-email" placeholder="e.g. corporationkorba@gmail.com">
+            <input id="d-email" placeholder="e.g. commissioner@gmail.com">
           </div>
           <div>
-            <label for="d-phone">Control Room Phone</label>
-            <input id="d-phone" placeholder="e.g. 07759-222333">
+            <label for="d-phone">Control Room Hotline</label>
+            <input id="d-phone" placeholder="e.g. 07782-222333">
           </div>
         </div>
         <div class="row">
           <div>
-            <label for="d-lat">Latitude</label>
-            <input id="d-lat" type="number" step="any" placeholder="22.3600">
+            <label for="d-lat">Center Latitude</label>
+            <input id="d-lat" type="number" step="any" placeholder="19.0748">
           </div>
           <div>
-            <label for="d-lng">Longitude</label>
-            <input id="d-lng" type="number" step="any" placeholder="82.7500">
+            <label for="d-lng">Center Longitude</label>
+            <input id="d-lng" type="number" step="any" placeholder="82.0086">
           </div>
         </div>
-        <div class="row" style="margin-top:10px">
-          <button type="button" class="admin-btn" id="d-save">💾 Save District</button>
+        <div class="row" style="margin-top:14px">
+          <button type="button" class="admin-btn" id="d-save">💾 Save & Sync District Across Devices</button>
           <button type="button" class="alt" id="d-cancel" hidden>Cancel Edit</button>
         </div>
       </div>
@@ -253,9 +946,9 @@ th{color:var(--mute);font-weight:700;background:var(--bg)}
             <tr>
               <th>District</th>
               <th>Municipal Body</th>
-              <th>Official Email & Phone</th>
-              <th>GPS</th>
-              <th>Actions</th>
+              <th>Dispatch Email & Phone</th>
+              <th>Coordinates</th>
+              <th>Control</th>
             </tr>
           </thead>
           <tbody id="adm-dist-tbody"></tbody>
@@ -265,17 +958,17 @@ th{color:var(--mute);font-weight:700;background:var(--bg)}
 
     <!-- Manage Users & Leaderboard Points -->
     <div class="card">
-      <h2>👥 Manage Users, Passwords & Leaderboard Points</h2>
-      <p class="mute" style="margin-top:0">Edit user names, adjust bonus civic points, view/change passwords, or remove accounts.</p>
+      <h2>👥 Operative Accounts, Passwords & Merit Points</h2>
+      <p class="mute" style="margin-top:0">Modify usernames, inspect or reset passwords, award bonus merit points, or revoke accounts across all devices.</p>
       <div class="tbl-wrap">
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>District & Contact</th>
+              <th>Operative</th>
+              <th>Jurisdiction & Contact</th>
               <th>Password</th>
               <th>Bonus Pts</th>
-              <th>Actions</th>
+              <th>Control</th>
             </tr>
           </thead>
           <tbody id="adm-user-tbody"></tbody>
@@ -285,51 +978,56 @@ th{color:var(--mute);font-weight:700;background:var(--bg)}
 
     <!-- Manage All Reports -->
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
-        <h2 style="margin:0">📋 All Citizen Reports (Full Edit & Moderation)</h2>
-        <button type="button" class="danger sm" id="adm-clear-reps">🗑️ Clear All Reports</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <h2 style="margin:0">📋 Global Dispatch Log (Full Edit & Moderation)</h2>
+        <button type="button" class="danger sm" id="adm-clear-reps">🗑️ Purge All Dispatches</button>
       </div>
       <div id="adm-reps-list"></div>
     </div>
   </section>
 </div>
 
-<!-- LOGIN / CREATE ACCOUNT MODAL -->
+<!-- ONBOARDING / AUTHENTICATION MODAL -->
 <div class="modal" id="onb" hidden>
   <div>
-    <h2>Login / Create UrbanPulse Account</h2>
-    <p class="mute" style="margin-top:0">Enter your name and password. New users will have their password saved automatically.</p>
-    <label for="an">Your Name / Username</label>
-    <input id="an" placeholder="Enter your name (e.g. ayansh)" autocomplete="username">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#0c4a4e,#e04f26);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800">⚓</span>
+      <h2 style="margin:0">UrbanPort Access Portal</h2>
+    </div>
+    <p class="mute" style="margin-top:0">Sign in with your operative credentials. First-time citizens automatically register their chosen password.</p>
 
-    <label for="apass">Password</label>
+    <label for="an">Operative Name / Username</label>
+    <input id="an" placeholder="e.g. ayansh" autocomplete="username">
+
+    <label for="apass">Security Password</label>
     <div class="pw-wrap">
-      <input id="apass" type="password" placeholder="Enter password" autocomplete="current-password">
-      <button type="button" class="pw-toggle" id="pw-eye">👁️</button>
+      <input id="apass" type="password" placeholder="Enter your password" autocomplete="current-password">
+      <button type="button" class="pw-toggle" id="pw-eye" aria-label="Show password">👁️</button>
     </div>
 
-    <label for="ad">District</label>
+    <label for="ad">Home Municipal District</label>
     <select id="ad"></select>
 
-    <label for="ac">Contact (Mobile or Email)</label>
-    <input id="ac" placeholder="10-digit mobile or email">
+    <label for="ac"> Oficial Contact (Mobile or Email)</label>
+    <input id="ac" placeholder="10-digit mobile or email address">
 
-    <p class="mute" id="aerr" style="color:var(--warn);font-weight:700;margin:8px 0 0"></p>
-    <button type="button" id="acreate" style="width:100%;margin-top:12px">🔑 Login / Continue</button>
+    <p class="mute" id="aerr" style="color:var(--warn);font-weight:700;margin:10px 0 0"></p>
+    <button type="button" class="cta-dispatch" id="acreate" style="width:100%;margin-top:14px">🔑 Authenticate & Enter UrbanPort</button>
   </div>
 </div>
 
 <!-- LOCATION SELECTOR MODAL -->
 <div class="modal" id="locmod" hidden>
   <div>
-    <h2>Change Active Location</h2>
-    <label for="ldist">District</label>
+    <h2>📍 Select Active Municipal Jurisdiction</h2>
+    <p class="mute" style="margin-top:0">Routing and automated email dispatches will target the selected district and ward.</p>
+    <label for="ldist">Municipal District</label>
     <select id="ldist"></select>
-    <label for="lward">Ward Number</label>
-    <input id="lward" type="number" min="1" max="70" value="14">
-    <div class="row" style="margin-top:14px">
+    <label for="lward">Ward Sector Number</label>
+    <input id="lward" type="number" min="1" max="100" value="14">
+    <div class="row" style="margin-top:18px">
       <button type="button" class="alt" id="loccancel">Cancel</button>
-      <button type="button" id="locsave">Save Location</button>
+      <button type="button" id="locsave">Lock Jurisdiction</button>
     </div>
   </div>
 </div>
@@ -337,9 +1035,9 @@ th{color:var(--mute);font-weight:700;background:var(--bg)}
 <!-- ADMIN EDIT REPORT MODAL -->
 <div class="modal" id="editrepmod" hidden>
   <div>
-    <h2>✏️ Edit Report Details</h2>
+    <h2>✏️ Modify Dispatch Record</h2>
     <input type="hidden" id="er-id">
-    <label for="er-cat">Hazard Title / Category</label>
+    <label for="er-cat">Hazard Classification / Title</label>
     <input id="er-cat">
     <div class="row">
       <div>
@@ -353,27 +1051,27 @@ th{color:var(--mute);font-weight:700;background:var(--bg)}
     </div>
     <div class="row">
       <div>
-        <label for="er-tier">Priority Tier</label>
+        <label for="er-tier">Priority Level</label>
         <select id="er-tier">
           <option value="standard">Standard</option>
           <option value="emergency">🚨 Emergency</option>
         </select>
       </div>
       <div>
-        <label for="er-status">Status</label>
+        <label for="er-status">Resolution Status</label>
         <select id="er-status">
-          <option value="open">Open</option>
-          <option value="closed">✅ Closed / Fixed</option>
+          <option value="open">Open / Active</option>
+          <option value="closed">✅ Closed / Resolved</option>
         </select>
       </div>
     </div>
-    <label for="er-name">Reported By (Citizen Name)</label>
+    <label for="er-name">Logged By (Operative Name)</label>
     <input id="er-name">
-    <label for="er-notes">Notes & Landmark</label>
+    <label for="er-notes">Field Notes & Landmark</label>
     <textarea id="er-notes" rows="3"></textarea>
-    <div class="row" style="margin-top:14px">
+    <div class="row" style="margin-top:16px">
       <button type="button" class="alt" id="er-cancel">Cancel</button>
-      <button type="button" class="admin-btn" id="er-save">💾 Save Changes</button>
+      <button type="button" class="admin-btn" id="er-save">💾 Save & Sync Record</button>
     </div>
   </div>
 </div>
@@ -381,21 +1079,21 @@ th{color:var(--mute);font-weight:700;background:var(--bg)}
 <!-- ADMIN EDIT USER MODAL -->
 <div class="modal" id="editusermod" hidden>
   <div>
-    <h2>✏️ Edit User Account</h2>
+    <h2>✏️ Modify Operative Credentials</h2>
     <input type="hidden" id="eu-idx">
-    <label for="eu-name">Username</label>
+    <label for="eu-name">Operative Username</label>
     <input id="eu-name">
-    <label for="eu-pass">Password</label>
+    <label for="eu-pass">Security Password</label>
     <input id="eu-pass">
-    <label for="eu-dist">District</label>
+    <label for="eu-dist">Assigned District</label>
     <select id="eu-dist"></select>
-    <label for="eu-contact">Contact</label>
+    <label for="eu-contact">Contact Details</label>
     <input id="eu-contact">
-    <label for="eu-bonus">Bonus Leaderboard Points</label>
+    <label for="eu-bonus">Bonus Civic Merit Points</label>
     <input id="eu-bonus" type="number" value="0">
-    <div class="row" style="margin-top:14px">
+    <div class="row" style="margin-top:16px">
       <button type="button" class="alt" id="eu-cancel">Cancel</button>
-      <button type="button" class="admin-btn" id="eu-save">💾 Save User</button>
+      <button type="button" class="admin-btn" id="eu-save">💾 Save & Sync Operative</button>
     </div>
   </div>
 </div>
@@ -405,12 +1103,56 @@ const $ = id => document.getElementById(id);
 
 const SUPER_ADMIN_USER = 'ayansh';
 const SUPER_ADMIN_PASS = '231238';
-
 const isSuperAdmin = u => u && String(u.name || '').trim().toLowerCase() === SUPER_ADMIN_USER && String(u.pass || '') === SUPER_ADMIN_PASS;
 
 const ls = {
-  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
-  set(k,v){ try { localStorage.setItem(k,v); } catch {} }
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} }
+};
+
+// Toast & Particle Micro-Interactions
+function showToast(msg, icon = '✨') {
+  const stack = $('toast-stack');
+  if (!stack) return;
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+  stack.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(12px) scale(0.95)';
+    el.style.transition = 'all 0.25s ease';
+    setTimeout(() => el.remove(), 260);
+  }, 3400);
+}
+
+function spawnParticles(x, y) {
+  const colors = ['#0c4a4e', '#14b8a6', '#e04f26', '#ffb703', '#5925dc'];
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 40 + Math.random() * 95;
+    p.style.left = (x || window.innerWidth / 2) + 'px';
+    p.style.top = (y || window.innerHeight / 2) + 'px';
+    p.style.background = colors[i % colors.length];
+    p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+    p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 900);
+  }
+}
+
+// Theme Switcher
+let curTheme = ls.get('up_theme') || 'light';
+document.documentElement.setAttribute('data-theme', curTheme);
+$('theme-btn').textContent = curTheme === 'dark' ? '☀️' : '🌙';
+$('theme-btn').onclick = () => {
+  curTheme = curTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', curTheme);
+  ls.set('up_theme', curTheme);
+  $('theme-btn').textContent = curTheme === 'dark' ? '☀️' : '🌙';
+  showToast(`Switched to ${curTheme === 'dark' ? 'Command Night' : 'Tactile Daylight'} mode`, curTheme === 'dark' ? '🌙' : '☀️');
 };
 
 const DEFAULT_DISTRICTS = [
@@ -452,14 +1194,14 @@ let reports = [];
 try { reports = JSON.parse(ls.get('up_reports') || 'null') || []; } catch { reports = []; }
 if (!reports.length) {
   reports = [{
-    id: 'UP-DEMO1',
+    id: 'UPT-DEMO1',
     uid: 'U-ADMIN',
     name: 'ayansh',
     district: 'Korba',
     body: 'Municipal Corporation Korba',
     ward: 14,
-    categoryLabel: 'Pothole / Damaged Road',
-    notes: 'Large crater near ITI chowk causing traffic hazard.',
+    categoryLabel: 'Pothole / Arterial Road Damage',
+    notes: 'Deep crater near ITI Chowk main arterial road causing traffic slowdown.',
     lat: 22.3612,
     lng: 82.7515,
     status: 'open',
@@ -469,6 +1211,7 @@ if (!reports.length) {
   ls.set('up_reports', JSON.stringify(reports));
 }
 
+let bannerText = ls.get('up_banner') || '';
 let photo = null;
 let loc = { lat: 22.3600, lng: 82.7500, dist: 'Korba', body: 'Municipal Corporation Korba', email: 'corporationkorba@gmail.com', ward: 14 };
 
@@ -476,10 +1219,81 @@ function findDist(name) {
   return districts.find(d => d.dist.toLowerCase() === String(name || '').toLowerCase()) || districts[0] || DEFAULT_DISTRICTS[0];
 }
 
+// CLOUD CROSS-DEVICE SYNC ENGINE
+async function pullCloudState(silent = true) {
+  try {
+    $('sync-btn').classList.add('spinning');
+    const res = await fetch('/api/bootstrap?t=' + Date.now());
+    if (!res.ok) throw new Error('Offline');
+    const data = await res.json();
+    if (data && data.ok && data.state) {
+      const st = data.state;
+      if (Array.isArray(st.districts) && st.districts.length) {
+        districts = st.districts;
+        ls.set('up_districts', JSON.stringify(districts));
+      }
+      if (Array.isArray(st.users) && st.users.length) {
+        users = st.users;
+        ls.set('up_users', JSON.stringify(users));
+      }
+      if (Array.isArray(st.reports)) {
+        reports = st.reports;
+        ls.set('up_reports', JSON.stringify(reports));
+      }
+      if (typeof st.banner === 'string') {
+        bannerText = st.banner;
+        ls.set('up_banner', bannerText);
+      }
+      populateDistrictSelects();
+      updateBannerDisplay();
+      updateRoutingPreview();
+      renderAll();
+      if (map3d) updateMapMarkers();
+      if ($('sync-indicator')) $('sync-indicator').textContent = '● CLOUD TELEMETRY SYNCED';
+      if (!silent) showToast('Synced latest districts & reports from cloud', '☁️');
+    }
+  } catch (e) {
+    if ($('sync-indicator')) $('sync-indicator').textContent = '● LOCAL CACHE ACTIVE';
+  } finally {
+    setTimeout(() => $('sync-btn').classList.remove('spinning'), 350);
+  }
+}
+
+async function pushCloudState(toastMsg) {
+  try {
+    $('sync-btn').classList.add('spinning');
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        districts,
+        users,
+        reports,
+        banner: bannerText
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok && data.state) {
+      if (toastMsg) showToast(toastMsg, '☁️');
+    }
+  } catch (e) {
+    if (toastMsg) showToast(toastMsg + ' (Saved locally)', '💾');
+  } finally {
+    setTimeout(() => $('sync-btn').classList.remove('spinning'), 350);
+  }
+}
+
+$('sync-btn').onclick = () => pullCloudState(false);
+if ($('feed-refresh')) $('feed-refresh').onclick = () => pullCloudState(false);
+if ($('adm-force-sync')) $('adm-force-sync').onclick = () => pushCloudState('All districts, users & reports pushed to cloud!');
+
+// Auto-poll every 12 seconds so other devices update live without refreshing
+setInterval(() => pullCloudState(true), 12000);
+
 function populateDistrictSelects() {
-  const opts = districts.map(d => `<option value="${d.dist}">${d.dist} (${d.body})</option>`).join('');
+  const opts = districts.map(d => `<option value="${d.dist}">${d.dist} — ${d.body}</option>`).join('');
   const simpleOpts = districts.map(d => `<option value="${d.dist}">${d.dist}</option>`).join('');
-  
+
   const curAd = $('ad').value;
   const curLdist = $('ldist').value;
   const curFd = $('fd').value;
@@ -488,25 +1302,24 @@ function populateDistrictSelects() {
   $('ldist').innerHTML = opts;
   $('er-dist').innerHTML = simpleOpts;
   $('eu-dist').innerHTML = simpleOpts;
-  $('fd').innerHTML = `<option value="">All Chhattisgarh Districts (${districts.length})</option>` + simpleOpts;
+  $('fd').innerHTML = `<option value="">All Chhattisgarh Jurisdictions (${districts.length})</option>` + simpleOpts;
 
-  if (curAd) $('ad').value = curAd;
-  if (curLdist) $('ldist').value = curLdist;
-  if (curFd) $('fd').value = curFd;
+  if (curAd && districts.some(d => d.dist === curAd)) $('ad').value = curAd;
+  if (curLdist && districts.some(d => d.dist === curLdist)) $('ldist').value = curLdist;
+  if (curFd && districts.some(d => d.dist === curFd)) $('fd').value = curFd;
 }
 
-// Show/Hide password toggle
 $('pw-eye').onclick = () => {
   const inp = $('apass');
   inp.type = inp.type === 'password' ? 'text' : 'password';
 };
 
-function checkAuth() {
+async function checkAuth() {
+  await pullCloudState(true);
   populateDistrictSelects();
   if (!acct || !acct.name || !acct.pass) {
     $('onb').hidden = false;
   } else {
-    // Re-verify if claiming to be ayansh
     if (acct.name.toLowerCase() === SUPER_ADMIN_USER && acct.pass !== SUPER_ADMIN_PASS) {
       acct = null;
       ls.set('up_acct', 'null');
@@ -518,33 +1331,30 @@ function checkAuth() {
   }
 }
 
-$('acreate').onclick = () => {
+$('acreate').onclick = async (ev) => {
   const name = $('an').value.trim();
   const pass = $('apass').value;
   const dist = $('ad').value || (districts[0] && districts[0].dist) || 'Korba';
   const contact = $('ac').value.trim();
 
   if (name.length < 2) {
-    $('aerr').textContent = '❌ Please enter your name (at least 2 characters).';
+    $('aerr').textContent = '⚠️ Operative name must be at least 2 characters.';
     return;
   }
   if (!pass) {
-    $('aerr').textContent = '❌ Please enter a password.';
+    $('aerr').textContent = '⚠️ Security password is required.';
     return;
   }
 
-  // Strict check for Super-Admin ayansh
-  if (name.toLowerCase() === SUPER_ADMIN_USER) {
-    if (pass !== SUPER_ADMIN_PASS) {
-      $('aerr').textContent = '❌ Incorrect password for Super-Admin ayansh!';
-      return;
-    }
+  if (name.toLowerCase() === SUPER_ADMIN_USER && pass !== SUPER_ADMIN_PASS) {
+    $('aerr').textContent = '❌ Access Denied: Invalid password for Super-Admin ayansh.';
+    return;
   }
 
   let existing = users.find(u => u.name.toLowerCase() === name.toLowerCase());
   if (existing) {
     if (existing.pass !== pass && name.toLowerCase() !== SUPER_ADMIN_USER) {
-      $('aerr').textContent = '❌ Incorrect password for this existing account!';
+      $('aerr').textContent = '❌ Incorrect password for this operative account.';
       return;
     }
     existing.district = dist;
@@ -557,7 +1367,7 @@ $('acreate').onclick = () => {
       name,
       pass,
       district: dist,
-      contact: contact || 'Verified Citizen',
+      contact: contact || 'Verified Operative',
       bonus: 0
     };
     users.push(acct);
@@ -571,7 +1381,10 @@ $('acreate').onclick = () => {
   loc = { dist: dc.dist, body: dc.body, email: dc.email, lat: dc.lat, lng: dc.lng, ward: loc.ward || 14 };
 
   $('onb').hidden = true;
+  spawnParticles(ev.clientX, ev.clientY);
+  showToast(`Welcome to UrbanPort, ${acct.name}!`, '⚓');
   boot();
+  await pushCloudState();
 };
 
 $('switch-acct').onclick = () => {
@@ -599,27 +1412,31 @@ $('locsave').onclick = () => {
   const dc = findDist(d);
   loc = { dist: dc.dist, ward: w, body: dc.body, email: dc.email, lat: dc.lat, lng: dc.lng };
   $('loctxt').textContent = `${loc.dist} · W${loc.ward}`;
-  $('gpsline').textContent = `📍 Coordinates: ${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)} (${loc.dist})`;
+  $('gpsline').textContent = `${loc.lat.toFixed(4)}° N, ${loc.lng.toFixed(4)}° E`;
   $('locmod').hidden = true;
   updateRoutingPreview();
-  if (map3d) map3d.flyTo({ center: [loc.lng, loc.lat], zoom: 13 });
+  showToast(`Active jurisdiction locked to ${loc.dist} · Ward ${loc.ward}`, '📍');
+  if (map3d) map3d.flyTo({ center: [loc.lng, loc.lat], zoom: 13.5, speed: 1.4 });
 };
 
 function updateBannerDisplay() {
-  const msg = ls.get('up_banner') || '';
   const el = $('sys-banner');
-  if (msg.trim()) {
-    el.textContent = '📢 ' + msg;
+  if (bannerText && bannerText.trim()) {
+    el.innerHTML = `<span>📡</span><span>${bannerText}</span>`;
     el.hidden = false;
   } else {
     el.hidden = true;
   }
-  if ($('adm-banner-in')) $('adm-banner-in').value = msg;
+  if ($('adm-banner-in') && document.activeElement !== $('adm-banner-in')) {
+    $('adm-banner-in').value = bannerText;
+  }
 }
 
-$('adm-banner-save').onclick = () => {
-  ls.set('up_banner', $('adm-banner-in').value.trim());
+$('adm-banner-save').onclick = async () => {
+  bannerText = $('adm-banner-in').value.trim();
+  ls.set('up_banner', bannerText);
   updateBannerDisplay();
+  await pushCloudState('Broadcast banner synced across all devices!');
 };
 
 function boot() {
@@ -629,19 +1446,19 @@ function boot() {
   $('adm-badge').hidden = !isAdm;
   $('tab-adm').hidden = !isAdm;
 
-  // If current tab was admin and user is not admin, switch to Report tab
   if (!isAdm && !$('t-adm').hidden) {
     document.querySelector('nav button[data-t="rep"]').click();
   }
 
   const dc = findDist(loc.dist);
+  loc.dist = dc.dist;
   loc.body = dc.body;
   loc.email = dc.email;
 
-  $('prof-name').textContent = isAdm ? `${acct.name} (⚡ Verified Super-Admin)` : acct.name;
-  $('prof-meta').textContent = `${acct.district} · ${acct.contact || 'Verified Citizen'}`;
+  $('prof-name').textContent = isAdm ? `${acct.name} (⚡ Super-Admin)` : acct.name;
+  $('prof-meta').textContent = `${acct.district} · ${acct.contact || 'Verified Operative'}`;
   $('loctxt').textContent = `${loc.dist} · W${loc.ward}`;
-  $('gpsline').textContent = `📍 Coordinates: ${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)} (${loc.dist})`;
+  $('gpsline').textContent = `${loc.lat.toFixed(4)}° N, ${loc.lng.toFixed(4)}° E`;
   updateRoutingPreview();
   renderAll();
 }
@@ -652,7 +1469,11 @@ function updateRoutingPreview() {
   $('custom-wrap').hidden = cat !== 'custom';
   const dc = findDist(loc.dist);
   $('prev').className = 'route' + (isEm ? ' em' : '');
-  $('prev').innerHTML = `<b>${isEm ? '🚨 Emergency Municipal Alert' : '📬 Standard Municipal Route'}</b>Target: ${dc.body} (${dc.dist}), Ward ${loc.ward}<br><span class="mute">Official Dispatch Email: ${dc.email || 'uaddatacenter@gmail.com'} ${dc.phone ? '· 📞 ' + dc.phone : ''}</span>`;
+  $('prev').innerHTML = `
+    <b>${isEm ? '🚨 PRIORITY-1 EMERGENCY TELEMETRY' : '📬 AUTOMATED MUNICIPAL DISPATCH ROUTE'}</b>
+    Target Authority: <strong>${dc.body}</strong> (${dc.dist}), Ward ${loc.ward}<br>
+    <span class="mute">Direct Dispatch Endpoint: <code>${dc.email || 'corporationkorba@gmail.com'}</code> ${dc.phone ? '· Hotline: ' + dc.phone : ''}</span>
+  `;
 }
 $('cat').onchange = updateRoutingPreview;
 $('custom-em').onchange = updateRoutingPreview;
@@ -679,6 +1500,7 @@ function handleImageFile(file) {
       photo = canvas.toDataURL('image/jpeg', 0.75);
       $('pv').src = photo;
       $('pv').hidden = false;
+      showToast('Visual evidence compressed & attached', '📷');
     };
     img.src = ev.target.result;
   };
@@ -688,7 +1510,7 @@ function handleImageFile(file) {
 $('fcam').onchange = e => handleImageFile(e.target.files[0]);
 $('fupl').onchange = e => handleImageFile(e.target.files[0]);
 
-$('send').onclick = async () => {
+$('send').onclick = async (ev) => {
   const cat = $('cat').value;
   const isEm = cat === 'custom' ? $('custom-em').checked : ['open_manhole','downed_power_line','road_collapse'].includes(cat);
   const label = cat === 'custom' ? ($('custom-title').value.trim() || 'Custom Civic Hazard') : $('cat').options[$('cat').selectedIndex].text;
@@ -696,10 +1518,10 @@ $('send').onclick = async () => {
 
   const btn = $('send');
   btn.disabled = true;
-  $('status').textContent = '⏳ Submitting report & dispatching automated email...';
+  $('status').textContent = '⏳ Encrypting telemetry & dispatching email to ' + dc.body + '...';
 
   const payload = {
-    id: 'UP-' + Date.now().toString(36).toUpperCase(),
+    id: 'UPT-' + Date.now().toString(36).toUpperCase(),
     uid: acct ? acct.uid : 'U-ANON',
     name: acct ? acct.name : 'Citizen',
     district: dc.dist,
@@ -716,7 +1538,7 @@ $('send').onclick = async () => {
     at: Date.now()
   };
 
-  let emailMsg = `Routed to ${dc.email || dc.body}`;
+  let emailMsg = `Dispatched to ${dc.email}`;
   try {
     const res = await fetch('/api/report', {
       method: 'POST',
@@ -725,19 +1547,27 @@ $('send').onclick = async () => {
     });
     const data = await res.json();
     if (res.ok && data.ok) {
+      if (data.state && Array.isArray(data.state.reports)) {
+        reports = data.state.reports;
+      } else {
+        reports.unshift(payload);
+      }
       const toList = (data.dispatch && data.dispatch.email && data.dispatch.email.to) ? data.dispatch.email.to.join(', ') : dc.email;
-      emailMsg = `Automated email sent to ${toList}`;
+      emailMsg = `Official email delivered to ${toList}`;
     } else {
-      emailMsg = `Saved & routed (${data.error || 'Local Queue'})`;
+      reports.unshift(payload);
+      emailMsg = `Logged (${data.error || 'Queued'})`;
     }
   } catch (err) {
+    reports.unshift(payload);
     emailMsg = `Saved & queued for ${dc.email}`;
   }
 
-  reports.unshift(payload);
   ls.set('up_reports', JSON.stringify(reports));
+  spawnParticles(ev.clientX, ev.clientY);
+  showToast(`Dispatch ${payload.id} transmitted!`, '🚀');
 
-  $('status').textContent = `✅ Report ${payload.id} submitted! ${emailMsg}.`;
+  $('status').textContent = `✅ Dispatch ${payload.id} confirmed! ${emailMsg}.`;
   $('notes').value = '';
   photo = null;
   $('pv').hidden = true;
@@ -747,7 +1577,7 @@ $('send').onclick = async () => {
   if (map3d) updateMapMarkers();
 };
 
-// 3D Map Logic
+// 3D MapLibre Radar
 let map3d = null, markers = [];
 function initMap() {
   if (map3d || typeof maplibregl === 'undefined') return;
@@ -755,14 +1585,16 @@ function initMap() {
     container: 'map3d',
     style: 'https://tiles.openfreemap.org/styles/liberty',
     center: [loc.lng, loc.lat],
-    zoom: 13,
-    pitch: 50
+    zoom: 13.2,
+    pitch: 52,
+    bearing: -12
   });
   map3d.on('click', e => {
     loc.lat = +e.lngLat.lat.toFixed(5);
     loc.lng = +e.lngLat.lng.toFixed(5);
-    $('gpsline').textContent = `📍 Pinned Coordinates: ${loc.lat}, ${loc.lng} (${loc.dist})`;
+    $('gpsline').textContent = `${loc.lat}° N, ${loc.lng}° E`;
     updateRoutingPreview();
+    showToast(`Radar coordinates locked: ${loc.lat}, ${loc.lng}`, '🎯');
   });
   map3d.on('load', updateMapMarkers);
 }
@@ -776,32 +1608,40 @@ function updateMapMarkers() {
     el.className = 'map-marker ' + (r.status === 'closed' ? 'ok' : r.tier === 'emergency' ? 'em' : 'std');
     const m = new maplibregl.Marker({ element: el })
       .setLngLat([r.lng || 82.75, r.lat || 22.36])
-      .setPopup(new maplibregl.Popup().setHTML(`<b>${r.categoryLabel}</b><br>${r.body} (W${r.ward})<br><small>${r.notes || ''}</small>`))
+      .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML(`
+        <div style="color:#111;font-family:sans-serif;padding:4px">
+          <b>${r.categoryLabel}</b><br>
+          <span style="font-size:12px;color:#555">${r.body} · Ward ${r.ward}</span><br>
+          <small>${r.notes || ''}</small>
+        </div>
+      `))
       .addTo(map3d);
     markers.push(m);
   });
 }
 
 $('map-pitch').onclick = () => {
-  if (map3d) map3d.easeTo({ pitch: map3d.getPitch() > 20 ? 0 : 50 });
+  if (map3d) map3d.easeTo({ pitch: map3d.getPitch() > 20 ? 0 : 55, duration: 700 });
 };
 
-// Report Actions (Mark Fixed, Edit, Delete)
-window.markFixed = id => {
+// Report Moderation Actions (Cloud Synced)
+window.markFixed = async id => {
   const r = reports.find(x => x.id === id);
   if (r) {
     r.status = r.status === 'closed' ? 'open' : 'closed';
     ls.set('up_reports', JSON.stringify(reports));
     renderAll();
     updateMapMarkers();
+    await pushCloudState(`Report ${r.id} marked ${r.status}`);
   }
 };
 
-window.delRep = id => {
+window.delRep = async id => {
   reports = reports.filter(x => x.id !== id);
   ls.set('up_reports', JSON.stringify(reports));
   renderAll();
   updateMapMarkers();
+  await pushCloudState(`Deleted report ${id}`);
 };
 
 window.openEditRep = id => {
@@ -820,7 +1660,7 @@ window.openEditRep = id => {
 };
 
 $('er-cancel').onclick = () => { $('editrepmod').hidden = true; };
-$('er-save').onclick = () => {
+$('er-save').onclick = async () => {
   const id = $('er-id').value;
   const r = reports.find(x => x.id === id);
   if (!r) return;
@@ -838,29 +1678,31 @@ $('er-save').onclick = () => {
   $('editrepmod').hidden = true;
   renderAll();
   updateMapMarkers();
+  await pushCloudState(`Updated report ${id} across all devices`);
 };
 
-$('adm-clear-reps').onclick = () => {
-  if (confirm('Are you sure you want to delete ALL reports?')) {
+$('adm-clear-reps').onclick = async () => {
+  if (confirm('Purge ALL dispatch records across all devices?')) {
     reports = [];
     ls.set('up_reports', JSON.stringify(reports));
     renderAll();
     updateMapMarkers();
+    await pushCloudState('Purged all dispatch logs');
   }
 };
 
-// District Management Actions (Add / Edit / Delete / Reset)
-$('d-save').onclick = () => {
+// District Registry Actions (Cloud Synced Across All Devices)
+$('d-save').onclick = async (ev) => {
   const dist = $('d-name').value.trim();
   const body = $('d-body').value.trim();
-  const email = $('d-email').value.trim() || 'uaddatacenter@gmail.com';
+  const email = $('d-email').value.trim() || 'corporationkorba@gmail.com';
   const phone = $('d-phone').value.trim();
   const lat = parseFloat($('d-lat').value) || 22.36;
   const lng = parseFloat($('d-lng').value) || 82.75;
   const idx = parseInt($('edit-dist-idx').value, 10);
 
   if (!dist || !body) {
-    alert('Please enter both District Name and Municipal Corporation Name.');
+    showToast('Please enter both District Name and Municipal Body', '⚠️');
     return;
   }
 
@@ -876,11 +1718,13 @@ $('d-save').onclick = () => {
   populateDistrictSelects();
   updateRoutingPreview();
   renderAll();
+  spawnParticles(ev.clientX, ev.clientY);
+  await pushCloudState(`District "${dist}" synced to all devices!`);
 };
 
 function resetDistForm() {
   $('edit-dist-idx').value = '-1';
-  $('dist-form-title').textContent = '➕ Add New District & Municipal Body';
+  $('dist-form-title').textContent = '➕ Register / Modify Municipal Jurisdiction';
   $('d-name').value = '';
   $('d-body').value = '';
   $('d-email').value = '';
@@ -895,7 +1739,7 @@ window.editDist = idx => {
   const d = districts[idx];
   if (!d) return;
   $('edit-dist-idx').value = idx;
-  $('dist-form-title').textContent = `✏️ Editing District: ${d.dist}`;
+  $('dist-form-title').textContent = `✏️ Modifying Jurisdiction: ${d.dist}`;
   $('d-name').value = d.dist;
   $('d-body').value = d.body;
   $('d-email').value = d.email || '';
@@ -903,29 +1747,32 @@ window.editDist = idx => {
   $('d-lat').value = d.lat;
   $('d-lng').value = d.lng;
   $('d-cancel').hidden = false;
+  $('d-name').focus();
 };
 
-window.delDist = idx => {
+window.delDist = async idx => {
   if (districts.length <= 1) {
-    alert('At least 1 district must remain in the platform.');
+    showToast('At least 1 municipal jurisdiction must remain active', '⚠️');
     return;
   }
-  districts.splice(idx, 1);
+  const removed = districts.splice(idx, 1)[0];
   ls.set('up_districts', JSON.stringify(districts));
   populateDistrictSelects();
   updateRoutingPreview();
   renderAll();
+  await pushCloudState(`Removed ${removed.dist} across all devices`);
 };
 
-$('adm-dist-reset').onclick = () => {
+$('adm-dist-reset').onclick = async () => {
   districts = JSON.parse(JSON.stringify(DEFAULT_DISTRICTS));
   ls.set('up_districts', JSON.stringify(districts));
   populateDistrictSelects();
   updateRoutingPreview();
   renderAll();
+  await pushCloudState('Restored default Chhattisgarh districts across all devices');
 };
 
-// User Management Actions
+// Operative User Management (Cloud Synced)
 window.openEditUser = idx => {
   const u = users[idx];
   if (!u) return;
@@ -940,7 +1787,7 @@ window.openEditUser = idx => {
 };
 
 $('eu-cancel').onclick = () => { $('editusermod').hidden = true; };
-$('eu-save').onclick = () => {
+$('eu-save').onclick = async () => {
   const idx = parseInt($('eu-idx').value, 10);
   const u = users[idx];
   if (!u) return;
@@ -950,7 +1797,6 @@ $('eu-save').onclick = () => {
   u.contact = $('eu-contact').value.trim();
   u.bonus = parseInt($('eu-bonus').value, 10) || 0;
 
-  // Keep Super-Admin ayansh password locked to 231238
   if (u.name.toLowerCase() === SUPER_ADMIN_USER) {
     u.pass = SUPER_ADMIN_PASS;
   }
@@ -962,39 +1808,48 @@ $('eu-save').onclick = () => {
   }
   $('editusermod').hidden = true;
   renderAll();
+  await pushCloudState(`Updated operative ${u.name}`);
 };
 
-window.delUser = idx => {
+window.delUser = async idx => {
   const u = users[idx];
   if (!u) return;
   if (u.name.toLowerCase() === SUPER_ADMIN_USER) {
-    alert('Cannot delete the primary Super-Admin account (ayansh).');
+    showToast('Primary Super-Admin (ayansh) cannot be deleted', '🛡️');
     return;
   }
   users.splice(idx, 1);
   ls.set('up_users', JSON.stringify(users));
   renderAll();
+  await pushCloudState(`Removed operative ${u.name}`);
 };
 
-function renderCard(r) {
+function renderCard(r, i = 0) {
   const isAdm = isSuperAdmin(acct);
   const isOwner = acct && (r.uid === acct.uid || r.name.toLowerCase() === acct.name.toLowerCase());
   const toggleBtn = (isOwner || isAdm)
-    ? `<button type="button" class="alt sm" onclick="markFixed('${r.id}')">${r.status === 'closed' ? '🔄 Reopen' : '✅ Mark Fixed'}</button>` : '';
+    ? `<button type="button" class="alt sm" onclick="markFixed('${r.id}')">${r.status === 'closed' ? '🔄 Reopen' : '✅ Mark Resolved'}</button>` : '';
   const editBtn = isAdm
     ? `<button type="button" class="admin-btn sm" onclick="openEditRep('${r.id}')">✏️ Edit</button>` : '';
   const delBtn = isAdm
     ? `<button type="button" class="danger sm" onclick="delRep('${r.id}')">🗑️ Delete</button>` : '';
 
-  return `<div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
-      <div><b>${r.categoryLabel}</b> <span class="tag${r.tier === 'emergency' ? ' em' : ''}">${r.tier}</span> <span class="tag${r.status === 'closed' ? ' ok' : ''}">${r.status}</span></div>
-      <span class="mute" style="font-size:.76rem">#${r.id}</span>
+  return `<div class="card" style="animation-delay:${Math.min(i * 55, 350)}ms">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <b style="font-size:1.04rem">${r.categoryLabel}</b>
+        <span class="tag${r.tier === 'emergency' ? ' em' : ''}">${r.tier}</span>
+        <span class="tag${r.status === 'closed' ? ' ok' : ''}">${r.status}</span>
+      </div>
+      <span class="mono-pill">#${r.id}</span>
     </div>
-    ${r.photo ? `<img src="${r.photo}" alt="Hazard photo">` : ''}
-    <p style="margin:6px 0">${r.notes || 'No extra details provided.'}</p>
-    <div class="mute">📍 ${r.body}, Ward ${r.ward} (${r.district}) · by <b>${r.name}</b></div>
-    ${(toggleBtn || editBtn || delBtn) ? `<div class="row" style="margin-top:8px">${toggleBtn}${editBtn}${delBtn}</div>` : ''}
+    ${r.photo ? `<img src="${r.photo}" alt="Field evidence">` : ''}
+    <p style="margin:10px 0">${r.notes || 'No supplementary field notes provided.'}</p>
+    <div class="mute" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px">
+      <span>📍 <strong>${r.body}</strong> · Ward ${r.ward} (${r.district})</span>
+      <span>Operative: <b>${r.name}</b></span>
+    </div>
+    ${(toggleBtn || editBtn || delBtn) ? `<div class="row" style="margin-top:12px">${toggleBtn}${editBtn}${delBtn}</div>` : ''}
   </div>`;
 }
 
@@ -1002,12 +1857,11 @@ function renderAll() {
   if (!acct) return;
   const fd = $('fd').value;
   const fReps = reports.filter(r => !fd || r.district === fd);
-  $('feed').innerHTML = fReps.length ? fReps.map(renderCard).join('') : '<p class="mute">No reports found for this district.</p>';
+  $('feed').innerHTML = fReps.length ? fReps.map((r, i) => renderCard(r, i)).join('') : '<div class="card"><p class="mute" style="margin:0">No dispatches logged for this jurisdiction yet.</p></div>';
 
   const myReps = reports.filter(r => r.uid === acct.uid || r.name.toLowerCase() === acct.name.toLowerCase());
-  $('mine').innerHTML = myReps.length ? myReps.map(renderCard).join('') : '<p class="mute">No reports submitted by you yet.</p>';
+  $('mine').innerHTML = myReps.length ? myReps.map((r, i) => renderCard(r, i)).join('') : '<div class="card"><p class="mute" style="margin:0">You have not transmitted any municipal dispatches yet.</p></div>';
 
-  // Calculate Leaderboard (Report points + Admin bonus points)
   const pts = {};
   users.forEach(u => {
     if (u.bonus) pts[u.name] = (pts[u.name] || 0) + (+u.bonus || 0);
@@ -1018,12 +1872,11 @@ function renderAll() {
 
   $('lbl').innerHTML = Object.entries(pts).sort((a, b) => b[1] - a[1]).map(([n, p], i) => `
     <div class="lb${n.toLowerCase() === acct.name.toLowerCase() ? ' me' : ''}">
-      <span class="rk">#${i + 1}</span>
-      <span class="nm"><b>${n}</b> ${n.toLowerCase() === SUPER_ADMIN_USER ? '<span class="badge-admin">Admin</span>' : ''}</span>
-      <span class="p">${p} pts</span>
-    </div>`).join('') || '<p class="mute">No points recorded yet.</p>';
+      <span class="rk">${i + 1}</span>
+      <span class="nm"><b>${n}</b> ${n.toLowerCase() === SUPER_ADMIN_USER ? '<span class="badge-admin">Command</span>' : ''}</span>
+      <span class="p">${p} PTS</span>
+    </div>`).join('') || '<p class="mute">No civic merit points recorded yet.</p>';
 
-  // Render Super-Admin Tables & Stats
   if (isSuperAdmin(acct)) {
     $('st-reps').textContent = reports.length;
     $('st-open').textContent = reports.filter(r => r.status === 'open').length;
@@ -1035,10 +1888,10 @@ function renderAll() {
       <tr>
         <td><b>${d.dist}</b></td>
         <td>${d.body}</td>
-        <td>${d.email || '-'}<br><span class="mute">${d.phone || ''}</span></td>
-        <td class="mute">${(+d.lat).toFixed(2)}, ${(+d.lng).toFixed(2)}</td>
+        <td><code>${d.email || '-'}</code><br><span class="mute">${d.phone || ''}</span></td>
+        <td class="mute" style="font-family:'JetBrains Mono',monospace;font-size:.75rem">${(+d.lat).toFixed(3)}, ${(+d.lng).toFixed(3)}</td>
         <td>
-          <div style="display:flex;gap:4px">
+          <div style="display:flex;gap:5px">
             <button type="button" class="alt sm" onclick="editDist(${i})">✏️</button>
             <button type="button" class="danger sm" onclick="delDist(${i})">🗑️</button>
           </div>
@@ -1053,7 +1906,7 @@ function renderAll() {
         <td><code>${u.pass || ''}</code></td>
         <td><b>${u.bonus || 0}</b></td>
         <td>
-          <div style="display:flex;gap:4px">
+          <div style="display:flex;gap:5px">
             <button type="button" class="alt sm" onclick="openEditUser(${i})">✏️</button>
             ${u.name.toLowerCase() !== SUPER_ADMIN_USER ? `<button type="button" class="danger sm" onclick="delUser(${i})">🗑️</button>` : ''}
           </div>
@@ -1061,7 +1914,7 @@ function renderAll() {
       </tr>
     `).join('');
 
-    $('adm-reps-list').innerHTML = reports.length ? reports.map(renderCard).join('') : '<p class="mute">No reports in system.</p>';
+    $('adm-reps-list').innerHTML = reports.length ? reports.map((r, i) => renderCard(r, i)).join('') : '<p class="mute">No dispatches in system.</p>';
   }
 }
 
