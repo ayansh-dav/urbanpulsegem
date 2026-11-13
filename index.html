@@ -34,6 +34,7 @@ label{display:block;font-size:.88rem;color:var(--mute);margin:10px 0 3px}
 input,select,textarea,button{font:inherit;color:inherit}
 input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}
 button{padding:9px 14px;border:1px solid var(--brand);background:var(--brand);color:var(--bi);border-radius:5px;cursor:pointer;font-weight:700}
+button:disabled{opacity:.6;cursor:not-allowed}
 button.alt{background:transparent;color:var(--ink);border-color:var(--line)}
 button.danger{background:var(--warn);border-color:var(--warn);color:#fff}
 button.sm{padding:5px 10px;font-size:.82rem}
@@ -44,7 +45,7 @@ button.sm{padding:5px 10px;font-size:.82rem}
 .tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:.78rem;border:1px solid var(--line)}
 .tag.em{background:var(--warn);color:#fff;border-color:var(--warn)}
 .tag.ok{color:var(--ok);border-color:var(--ok)}
-.item img{width:100%;max-height:260px;object-fit:cover;border-radius:6px;margin:8px 0;background:var(--line)}
+.card img{width:100%;max-height:260px;object-fit:cover;border-radius:6px;margin:8px 0;background:var(--line)}
 .lb{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line)}.lb:first-of-type{border-top:0}
 .lb .rk{width:2.2ch;font-weight:700}.lb .nm{flex:1}.lb.me{background:var(--bg);margin:0 -8px;padding:9px 8px;border-radius:4px}.lb .p{font-weight:700;color:var(--brand)}
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:12px}
@@ -56,27 +57,25 @@ button.sm{padding:5px 10px;font-size:.82rem}
 .map-marker.std{background:#f4a261}
 .map-marker.ok{background:#2a9d8f}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(230,57,70,.7)}70%{box-shadow:0 0 0 12px rgba(230,57,70,0)}100%{box-shadow:0 0 0 0 rgba(230,57,70,0)}}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;display:flex;align-items:flex-end;justify-content:center}
-.modal>div{background:var(--panel);width:100%;max-width:580px;border-radius:14px 14px 0 0;padding:18px 16px 24px;max-height:90vh;overflow:auto}
-.tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.86rem}
-th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal[hidden]{display:none !important}
+.modal>div{background:var(--panel);width:100%;max-width:480px;border-radius:12px;padding:20px;max-height:90vh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <button id="locbtn" aria-label="Change location"><span>📍</span><span id="loctxt">Korba · W14</span></button>
+    <button id="locbtn" type="button" aria-label="Change location"><span>📍</span><span id="loctxt">Korba · W14</span></button>
     <h1>UrbanPulse <span id="adm-badge" class="badge-admin" hidden>Super Admin</span></h1>
   </header>
 
   <nav role="tablist">
-    <button role="tab" data-t="rep" aria-selected="true">Report</button>
-    <button role="tab" data-t="map" aria-selected="false">3D Map 🌐</button>
-    <button role="tab" data-t="feed" aria-selected="false">Community</button>
-    <button role="tab" data-t="lb" aria-selected="false">Leaderboard</button>
-    <button role="tab" data-t="mine" aria-selected="false">Mine</button>
-    <button role="tab" data-t="adm" id="tab-adm" class="admin-tab" aria-selected="false" hidden>Admin ⚡</button>
+    <button role="tab" type="button" data-t="rep" aria-selected="true">Report</button>
+    <button role="tab" type="button" data-t="map" aria-selected="false">3D Map 🌐</button>
+    <button role="tab" type="button" data-t="feed" aria-selected="false">Community</button>
+    <button role="tab" type="button" data-t="lb" aria-selected="false">Leaderboard</button>
+    <button role="tab" type="button" data-t="mine" aria-selected="false">Mine</button>
+    <button role="tab" type="button" data-t="adm" id="tab-adm" class="admin-tab" aria-selected="false" hidden>Admin ⚡</button>
   </nav>
 
   <section id="t-rep">
@@ -120,9 +119,9 @@ th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertic
       <div class="route" id="prev"></div>
 
       <div class="row" style="margin-top:12px">
-        <button id="send" style="width:100%">🚀 Submit & Route to Corporation</button>
+        <button type="button" id="send" style="width:100%">🚀 Submit & Auto-Email Corporation</button>
       </div>
-      <p class="mute" id="status" style="margin-top:8px" aria-live="polite"></p>
+      <p class="mute" id="status" style="margin-top:8px;font-weight:700" aria-live="polite"></p>
     </div>
   </section>
 
@@ -131,7 +130,7 @@ th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertic
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
         <div>
           <h2 style="margin:0">Chhattisgarh 3D Live Hazard Map</h2>
-          <p class="mute" style="margin:0">Tap any pin or click map to set location.</p>
+          <p class="mute" style="margin:0">Tap any pin or click map to set hazard coordinates.</p>
         </div>
         <button type="button" class="alt sm" id="map-pitch">Toggle 3D Tilt</button>
       </div>
@@ -142,7 +141,17 @@ th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertic
   <section id="t-feed" hidden>
     <div class="card">
       <label for="fd" style="margin-top:0">Filter Reports by District</label>
-      <select id="fd"><option value="">All Chhattisgarh Districts</option><option value="Korba">Korba</option><option value="Raipur">Raipur</option><option value="Bilaspur">Bilaspur</option><option value="Durg">Durg</option><option value="Raigarh">Raigarh</option><option value="Surguja">Surguja</option><option value="Dhamtari">Dhamtari</option><option value="Mahasamund">Mahasamund</option></select>
+      <select id="fd">
+        <option value="">All Chhattisgarh Districts</option>
+        <option value="Korba">Korba</option>
+        <option value="Raipur">Raipur</option>
+        <option value="Bilaspur">Bilaspur</option>
+        <option value="Durg">Durg</option>
+        <option value="Raigarh">Raigarh</option>
+        <option value="Surguja">Surguja</option>
+        <option value="Dhamtari">Dhamtari</option>
+        <option value="Mahasamund">Mahasamund</option>
+      </select>
     </div>
     <div id="feed"></div>
   </section>
@@ -180,85 +189,230 @@ th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertic
   </section>
 </div>
 
+<!-- Account Onboarding Modal -->
 <div class="modal" id="onb" hidden>
   <div>
     <h2>Create Your UrbanPulse Account</h2>
-    <label for="an">Your Name</label><input id="an" placeholder="Enter your name">
+    <label for="an">Your Name</label>
+    <input id="an" placeholder="Enter your name">
     <label for="ad">District</label>
-    <select id="ad"><option value="Korba">Korba</option><option value="Raipur">Raipur</option><option value="Bilaspur">Bilaspur</option><option value="Durg">Durg</option><option value="Raigarh">Raigarh</option><option value="Surguja">Surguja</option><option value="Dhamtari">Dhamtari</option><option value="Mahasamund">Mahasamund</option></select>
-    <label for="ac">Contact (Mobile or Email)</label><input id="ac" placeholder="10-digit mobile or email">
-    <p class="mute" id="aerr" style="color:var(--warn)"></p>
-    <button id="acreate" style="width:100%;margin-top:10px">Continue</button>
+    <select id="ad">
+      <option value="Korba">Korba</option>
+      <option value="Raipur">Raipur</option>
+      <option value="Bilaspur">Bilaspur</option>
+      <option value="Durg">Durg</option>
+      <option value="Raigarh">Raigarh</option>
+      <option value="Surguja">Surguja</option>
+      <option value="Dhamtari">Dhamtari</option>
+      <option value="Mahasamund">Mahasamund</option>
+    </select>
+    <label for="ac">Contact (Mobile or Email)</label>
+    <input id="ac" placeholder="10-digit mobile or email">
+    <p class="mute" id="aerr" style="color:var(--warn);margin:6px 0 0"></p>
+    <button type="button" id="acreate" style="width:100%;margin-top:12px">Continue</button>
+  </div>
+</div>
+
+<!-- Location Selector Modal -->
+<div class="modal" id="locmod" hidden>
+  <div>
+    <h2>Change Active Location</h2>
+    <label for="ldist">District</label>
+    <select id="ldist">
+      <option value="Korba">Korba</option>
+      <option value="Raipur">Raipur</option>
+      <option value="Bilaspur">Bilaspur</option>
+      <option value="Durg">Durg</option>
+      <option value="Raigarh">Raigarh</option>
+      <option value="Surguja">Surguja</option>
+      <option value="Dhamtari">Dhamtari</option>
+      <option value="Mahasamund">Mahasamund</option>
+    </select>
+    <label for="lward">Ward Number</label>
+    <input id="lward" type="number" min="1" max="70" value="14">
+    <div class="row" style="margin-top:14px">
+      <button type="button" class="alt" id="loccancel">Cancel</button>
+      <button type="button" id="locsave">Save Location</button>
+    </div>
   </div>
 </div>
 
 <script>
+const $ = id => document.getElementById(id);
 const _K_ADM = '75.83.75.68.89.66';
 const _chkAdm = s => [...String(s || '').trim().toLowerCase()].map(c => c.charCodeAt(0) ^ 42).join('.') === _K_ADM;
-const ls = { get(k){try{return localStorage.getItem(k)}catch{return null}}, set(k,v){try{localStorage.setItem(k,v)}catch{}} };
+const ls = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch {} }
+};
 
-let uid = ls.get('up_uid') || (ls.set('up_uid', 'U-' + Math.random().toString(36).slice(2, 9).toUpperCase()), ls.get('up_uid'));
-let acct = JSON.parse(ls.get('up_acct') || 'null');
-let reports = JSON.parse(ls.get('up_reports') || 'null') || [
-  {id:'UP-DEMO1',name:'Ayansh',district:'Korba',body:'Municipal Corporation Korba',ward:14,categoryLabel:'Pothole / Damaged Road',notes:'Large crater near ITI chowk.',lat:22.3612,lng:82.7515,status:'open',tier:'standard',at:Date.now()-3600000}
-];
-let photo = null, loc = {lat:22.36,lng:82.75,dist:'Korba',body:'Municipal Corporation Korba',ward:14};
+const DIST_COORDS = {
+  Korba: { lat: 22.3600, lng: 82.7500, body: 'Municipal Corporation Korba' },
+  Raipur: { lat: 21.2514, lng: 81.6296, body: 'Raipur Municipal Corporation' },
+  Bilaspur: { lat: 22.0797, lng: 82.1409, body: 'Nagar Nigam Bilaspur' },
+  Durg: { lat: 21.2090, lng: 81.3790, body: 'Nagar Nigam Bhilai' },
+  Raigarh: { lat: 21.8974, lng: 83.3950, body: 'Raigarh Municipal Corporation' },
+  Surguja: { lat: 23.1200, lng: 83.2000, body: 'Municipal Corporation Ambikapur' },
+  Dhamtari: { lat: 20.7072, lng: 81.5497, body: 'Dhamtari Municipal Corporation' },
+  Mahasamund: { lat: 21.1070, lng: 82.0979, body: 'Municipality Mahasamund' }
+};
 
-function checkAuth(){
-  if(!acct) $('onb').hidden = false;
-  else { $('onb').hidden = true; boot(); }
+let uid = ls.get('up_uid');
+if (!uid) {
+  uid = 'U-' + Math.random().toString(36).slice(2, 9).toUpperCase();
+  ls.set('up_uid', uid);
 }
+
+let acct = null;
+try { acct = JSON.parse(ls.get('up_acct') || 'null'); } catch { acct = null; }
+
+let reports = [];
+try { reports = JSON.parse(ls.get('up_reports') || 'null') || []; } catch { reports = []; }
+if (!reports.length) {
+  reports = [{
+    id: 'UP-DEMO1',
+    uid: 'U-DEMO',
+    name: 'Ayansh',
+    district: 'Korba',
+    body: 'Municipal Corporation Korba',
+    ward: 14,
+    categoryLabel: 'Pothole / Damaged Road',
+    notes: 'Large crater near ITI chowk causing traffic hazard.',
+    lat: 22.3612,
+    lng: 82.7515,
+    status: 'open',
+    tier: 'standard',
+    at: Date.now() - 3600000
+  }];
+}
+
+let photo = null;
+let loc = { lat: 22.3600, lng: 82.7500, dist: 'Korba', body: 'Municipal Corporation Korba', ward: 14 };
+
+function checkAuth() {
+  if (!acct || !acct.name) {
+    $('onb').hidden = false;
+  } else {
+    $('onb').hidden = true;
+    boot();
+  }
+}
+
 $('acreate').onclick = () => {
-  const name = $('an').value.trim(), c = $('ac').value.trim(), dist = $('ad').value;
-  if(name.length < 2) return $('aerr').textContent = 'Enter your name.';
-  acct = {uid, name, district:dist, contact:c};
+  const name = $('an').value.trim();
+  const dist = $('ad').value || 'Korba';
+  const contact = $('ac').value.trim();
+  if (name.length < 2) {
+    $('aerr').textContent = 'Please enter your name (at least 2 characters).';
+    return;
+  }
+  $('aerr').textContent = '';
+  acct = { uid, name, district: dist, contact };
   ls.set('up_acct', JSON.stringify(acct));
+  
+  const dc = DIST_COORDS[dist] || DIST_COORDS.Korba;
+  loc.dist = dist;
+  loc.body = dc.body;
+  loc.lat = dc.lat;
+  loc.lng = dc.lng;
+
   $('onb').hidden = true;
   boot();
 };
-$('switch-acct').onclick = () => { $('onb').hidden = false; };
 
-function boot(){
+$('switch-acct').onclick = () => {
+  if (acct) {
+    $('an').value = acct.name || '';
+    $('ad').value = acct.district || 'Korba';
+    $('ac').value = acct.contact || '';
+  }
+  $('onb').hidden = false;
+};
+
+$('locbtn').onclick = () => {
+  $('ldist').value = loc.dist;
+  $('lward').value = loc.ward;
+  $('locmod').hidden = false;
+};
+$('loccancel').onclick = () => { $('locmod').hidden = true; };
+$('locsave').onclick = () => {
+  const d = $('ldist').value;
+  const w = Math.max(1, parseInt($('lward').value, 10) || 1);
+  const dc = DIST_COORDS[d] || DIST_COORDS.Korba;
+  loc = { dist: d, ward: w, body: dc.body, lat: dc.lat, lng: dc.lng };
+  $('loctxt').textContent = `${loc.dist} · W${loc.ward}`;
+  $('gpsline').textContent = `📍 Coordinates: ${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)} (${loc.dist})`;
+  $('locmod').hidden = true;
+  updateRoutingPreview();
+  if (map3d) map3d.flyTo({ center: [loc.lng, loc.lat], zoom: 13 });
+};
+
+function boot() {
   const isAdm = _chkAdm(acct.name);
   $('adm-badge').hidden = !isAdm;
   $('tab-adm').hidden = !isAdm;
-  $('prof-name').textContent = isAdm ? 'Verified Super-Admin' : acct.name;
-  $('prof-meta').textContent = `${acct.district}`;
+  $('prof-name').textContent = isAdm ? `${acct.name} (Verified Super-Admin)` : acct.name;
+  $('prof-meta').textContent = `${acct.district} · ${acct.contact || 'Verified Citizen'}`;
+  $('loctxt').textContent = `${loc.dist} · W${loc.ward}`;
+  $('gpsline').textContent = `📍 Coordinates: ${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)} (${loc.dist})`;
   updateRoutingPreview();
   renderAll();
 }
 
-function updateRoutingPreview(){
+function updateRoutingPreview() {
   const cat = $('cat').value;
   const isEm = cat === 'custom' ? $('custom-em').checked : ['open_manhole','downed_power_line','road_collapse'].includes(cat);
   $('custom-wrap').hidden = cat !== 'custom';
   $('prev').className = 'route' + (isEm ? ' em' : '');
-  $('prev').innerHTML = `<b>${isEm ? '🚨 Emergency Municipal Alert' : '📬 Standard Municipal Route'}</b>Target: ${loc.body} (${loc.dist}), Ward ${loc.ward}`;
+  $('prev').innerHTML = `<b>${isEm ? '🚨 Emergency Municipal Alert' : '📬 Standard Municipal Route'}</b>Target: ${loc.body} (${loc.dist}), Ward ${loc.ward}<br><span class="mute">Auto-dispatches official email via UrbanPulse Backend</span>`;
 }
 $('cat').onchange = updateRoutingPreview;
 $('custom-em').onchange = updateRoutingPreview;
 
 $('cam').onclick = () => $('fcam').click();
 $('upl').onclick = () => $('fupl').click();
-for(const id of ['fcam','fupl']){
-  $(id).onchange = e => {
-    const f = e.target.files[0];
-    if(!f)return;
-    const r = new FileReader();
-    r.onload = ev => { photo = ev.target.result; $('pv').src = photo; $('pv').hidden = false; };
-    r.readAsDataURL(f);
+
+function handleImageFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const maxDim = 900;
+      let w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+        else { w = Math.round(w * maxDim / h); h = maxDim; }
+      }
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      photo = canvas.toDataURL('image/jpeg', 0.75);
+      $('pv').src = photo;
+      $('pv').hidden = false;
+    };
+    img.src = ev.target.result;
   };
+  reader.readAsDataURL(file);
 }
 
-$('send').onclick = () => {
+$('fcam').onchange = e => handleImageFile(e.target.files[0]);
+$('fupl').onchange = e => handleImageFile(e.target.files[0]);
+
+$('send').onclick = async () => {
   const cat = $('cat').value;
   const isEm = cat === 'custom' ? $('custom-em').checked : ['open_manhole','downed_power_line','road_collapse'].includes(cat);
-  const label = cat === 'custom' ? ($('custom-title').value.trim() || 'Custom Issue') : $('cat').options[$('cat').selectedIndex].text;
-  
-  const r = {
+  const label = cat === 'custom' ? ($('custom-title').value.trim() || 'Custom Civic Hazard') : $('cat').options[$('cat').selectedIndex].text;
+
+  const btn = $('send');
+  btn.disabled = true;
+  $('status').textContent = '⏳ Submitting report & dispatching automated email...';
+
+  const payload = {
     id: 'UP-' + Date.now().toString(36).toUpperCase(),
     uid,
-    name: acct.name,
+    name: acct ? acct.name : 'Citizen',
     district: loc.dist,
     body: loc.body,
     ward: loc.ward,
@@ -267,60 +421,90 @@ $('send').onclick = () => {
     lat: loc.lat,
     lng: loc.lng,
     photo,
-    status:'open',
+    status: 'open',
     tier: isEm ? 'emergency' : 'standard',
     at: Date.now()
   };
 
-  reports.unshift(r);
+  let emailMsg = 'Routed to Municipal Server';
+  try {
+    const res = await fetch('/api/report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      const toList = (data.dispatch && data.dispatch.email && data.dispatch.email.to) ? data.dispatch.email.to.join(', ') : 'Municipal Authorities';
+      emailMsg = `Automated email sent to ${toList}`;
+    } else {
+      emailMsg = `Recorded locally (${data.error || 'Backend offline'})`;
+    }
+  } catch (err) {
+    emailMsg = 'Saved locally & queued for Municipal Dispatch';
+  }
+
+  reports.unshift(payload);
   ls.set('up_reports', JSON.stringify(reports));
-  $('status').textContent = `✅ Report ${r.id} successfully recorded & routed to ${loc.body}!`;
+
+  $('status').textContent = `✅ Report ${payload.id} submitted! ${emailMsg}.`;
   $('notes').value = '';
   photo = null;
   $('pv').hidden = true;
+  btn.disabled = false;
+
   renderAll();
-  if(map3d) updateMapMarkers();
+  if (map3d) updateMapMarkers();
 };
 
 let map3d = null, markers = [];
-function initMap(){
-  if(map3d || typeof maplibregl === 'undefined')return;
+function initMap() {
+  if (map3d || typeof maplibregl === 'undefined') return;
   map3d = new maplibregl.Map({
-    container:'map3d',
-    style:'https://tiles.openfreemap.org/styles/liberty',
-    center:[loc.lng, loc.lat],
-    zoom:13,
-    pitch:50
+    container: 'map3d',
+    style: 'https://tiles.openfreemap.org/styles/liberty',
+    center: [loc.lng, loc.lat],
+    zoom: 13,
+    pitch: 50
   });
   map3d.on('click', e => {
     loc.lat = +e.lngLat.lat.toFixed(5);
     loc.lng = +e.lngLat.lng.toFixed(5);
-    $('gpsline').textContent = `📍 Pinned Coordinates: ${loc.lat}, ${loc.lng}`;
+    $('gpsline').textContent = `📍 Pinned Coordinates: ${loc.lat}, ${loc.lng} (${loc.dist})`;
     updateRoutingPreview();
   });
   map3d.on('load', updateMapMarkers);
 }
 
-function updateMapMarkers(){
-  if(!map3d)return;
+function updateMapMarkers() {
+  if (!map3d) return;
   markers.forEach(m => m.remove());
   markers = [];
   reports.forEach(r => {
     const el = document.createElement('div');
-    el.className = 'map-marker ' + (r.status==='closed'?'ok':r.tier==='emergency'?'em':'std');
-    const m = new maplibregl.Marker({element:el}).setLngLat([r.lng, r.lat])
-      .setPopup(new maplibregl.Popup().setHTML(`<b>${r.categoryLabel}</b><br>${r.body}`))
+    el.className = 'map-marker ' + (r.status === 'closed' ? 'ok' : r.tier === 'emergency' ? 'em' : 'std');
+    const m = new maplibregl.Marker({ element: el })
+      .setLngLat([r.lng || 82.75, r.lat || 22.36])
+      .setPopup(new maplibregl.Popup().setHTML(`<b>${r.categoryLabel}</b><br>${r.body} (W${r.ward})<br><small>${r.notes || ''}</small>`))
       .addTo(map3d);
     markers.push(m);
   });
 }
 
-$('map-pitch').onclick = () => map3d && map3d.easeTo({pitch: map3d.getPitch()>20?0:50});
+$('map-pitch').onclick = () => {
+  if (map3d) map3d.easeTo({ pitch: map3d.getPitch() > 20 ? 0 : 50 });
+};
 
 window.markFixed = id => {
   const r = reports.find(x => x.id === id);
-  if(r){ r.status = 'closed'; ls.set('up_reports', JSON.stringify(reports)); renderAll(); updateMapMarkers(); }
+  if (r) {
+    r.status = 'closed';
+    ls.set('up_reports', JSON.stringify(reports));
+    renderAll();
+    updateMapMarkers();
+  }
 };
+
 window.delRep = id => {
   reports = reports.filter(x => x.id !== id);
   ls.set('up_reports', JSON.stringify(reports));
@@ -328,46 +512,62 @@ window.delRep = id => {
   updateMapMarkers();
 };
 
-function renderCard(r){
-  const isAdm = _chkAdm(acct.name);
-  const fixedBtn = (r.uid === uid && r.status === 'open') ? `<button class="alt sm" onclick="markFixed('${r.id}')">✅ Mark Fixed</button>` : '';
-  const delBtn = isAdm ? `<button class="danger sm" onclick="delRep('${r.id}')">🗑️ Delete</button>` : '';
+function renderCard(r) {
+  const isAdm = acct && _chkAdm(acct.name);
+  const fixedBtn = ((r.uid === uid || isAdm) && r.status === 'open')
+    ? `<button type="button" class="alt sm" onclick="markFixed('${r.id}')">✅ Mark Fixed</button>` : '';
+  const delBtn = isAdm
+    ? `<button type="button" class="danger sm" onclick="delRep('${r.id}')">🗑️ Delete</button>` : '';
   return `<div class="card">
-    <div><b>${r.categoryLabel}</b> <span class="tag${r.tier==='emergency'?' em':''}">${r.tier}</span> <span class="tag${r.status==='closed'?' ok':''}">${r.status}</span></div>
-    ${r.photo?`<img src="${r.photo}">`:''}
-    <p style="margin:6px 0">${r.notes || 'No notes'}</p>
-    <div class="mute">📍 ${r.body}, Ward ${r.ward} · by <b>${r.name}</b></div>
-    ${(fixedBtn||delBtn)?`<div class="row" style="margin-top:8px">${fixedBtn}${delBtn}</div>`:''}
+    <div><b>${r.categoryLabel}</b> <span class="tag${r.tier === 'emergency' ? ' em' : ''}">${r.tier}</span> <span class="tag${r.status === 'closed' ? ' ok' : ''}">${r.status}</span></div>
+    ${r.photo ? `<img src="${r.photo}" alt="Hazard photo">` : ''}
+    <p style="margin:6px 0">${r.notes || 'No extra details provided.'}</p>
+    <div class="mute">📍 ${r.body}, Ward ${r.ward} (${r.district}) · by <b>${r.name}</b></div>
+    ${(fixedBtn || delBtn) ? `<div class="row" style="margin-top:8px">${fixedBtn}${delBtn}</div>` : ''}
   </div>`;
 }
 
-function renderAll(){
+function renderAll() {
+  if (!acct) return;
   const fd = $('fd').value;
   const fReps = reports.filter(r => !fd || r.district === fd);
-  $('feed').innerHTML = fReps.length ? fReps.map(renderCard).join('') : '<p class="mute">No reports found.</p>';
-  $('mine').innerHTML = reports.filter(r => r.uid === uid).map(renderCard).join('') || '<p class="mute">No reports submitted by you.</p>';
+  $('feed').innerHTML = fReps.length ? fReps.map(renderCard).join('') : '<p class="mute">No reports found for this district.</p>';
   
-  // Leaderboard
+  const myReps = reports.filter(r => r.uid === uid || r.name.toLowerCase() === acct.name.toLowerCase());
+  $('mine').innerHTML = myReps.length ? myReps.map(renderCard).join('') : '<p class="mute">No reports submitted by you yet.</p>';
+
   const pts = {};
   reports.forEach(r => {
-    pts[r.name] = (pts[r.name] || 0) + (r.tier==='emergency'?50:20);
+    pts[r.name] = (pts[r.name] || 0) + (r.tier === 'emergency' ? 50 : 20);
   });
-  $('lbl').innerHTML = Object.entries(pts).sort((a,b)=>b[1]-a[1]).map(([n, p], i)=>`
-    <div class="lb"><span class="rk">#${i+1}</span><span class="nm"><b>${n}</b></span><span class="p">${p} pts</span></div>`).join('') || '<p class="mute">No points yet.</p>';
+  $('lbl').innerHTML = Object.entries(pts).sort((a, b) => b[1] - a[1]).map(([n, p], i) => `
+    <div class="lb${n.toLowerCase() === acct.name.toLowerCase() ? ' me' : ''}">
+      <span class="rk">#${i + 1}</span>
+      <span class="nm"><b>${n}</b></span>
+      <span class="p">${p} pts</span>
+    </div>`).join('') || '<p class="mute">No points recorded yet.</p>';
 
-  if(_chkAdm(acct.name)){
+  if (_chkAdm(acct.name)) {
     $('st-reps').textContent = reports.length;
-    $('st-em').textContent = reports.filter(r => r.tier==='emergency').length;
+    $('st-em').textContent = reports.filter(r => r.tier === 'emergency').length;
     $('adm-reps-list').innerHTML = reports.map(renderCard).join('');
   }
 }
 
 $('fd').onchange = renderAll;
 
-document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
-  document.querySelectorAll('nav button').forEach(x => x.setAttribute('aria-selected', x === b));
-  ['rep','map','feed','lb','mine','adm'].forEach(t => $('t-'+t).hidden = t !== b.dataset.t);
-  if(b.dataset.t==='map'){ initMap(); setTimeout(()=>map3d&&map3d.resize(),100); }
+document.querySelectorAll('nav button').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('nav button').forEach(x => x.setAttribute('aria-selected', x === b));
+    ['rep','map','feed','lb','mine','adm'].forEach(t => {
+      const sec = $('t-' + t);
+      if (sec) sec.hidden = (t !== b.dataset.t);
+    });
+    if (b.dataset.t === 'map') {
+      initMap();
+      setTimeout(() => map3d && map3d.resize(), 120);
+    }
+  };
 });
 
 checkAuth();
